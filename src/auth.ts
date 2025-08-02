@@ -21,7 +21,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         authorize: async ({email,password})=>{
             console.log(email,password);
 
-            const user={email:"sdsd", id: "dfd"};
+            if(typeof email !=="string") throw new CredentialsSignin("Email is not valid")
+
+            const user={email, id: "dfd"};
 
             if(password!="passcode")
                 throw new CredentialsSignin("Password does not match");
