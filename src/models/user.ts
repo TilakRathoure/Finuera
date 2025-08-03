@@ -12,7 +12,7 @@ const Schema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    select:false,
   },
 
   googleID: {
@@ -20,3 +20,8 @@ const Schema = new mongoose.Schema({
     required:true,
   },
 });
+
+export const User=mongoose.models?.User || mongoose.model("User",Schema);
+
+
+  
