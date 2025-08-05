@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Boldonse } from "next/font/google";
 
 const Schema = new mongoose.Schema({
   name: {
