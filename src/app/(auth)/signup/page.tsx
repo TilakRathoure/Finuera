@@ -20,9 +20,9 @@ import { toast } from "sonner";
 
 const SignupPage=()=>{
 
-    const session=await auth();
+    // // const session=await auth();
 
-    if(session?.user) return redirect("/");
+    // if(session?.user) return redirect("/");
 
   return (
     <div className="bg-black h-screen flex justify-center items-center">
