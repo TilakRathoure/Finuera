@@ -3,6 +3,7 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { User } from "./models/user";
 import { compare } from "bcryptjs";
+import { connectdb } from "./lib/utils";
  
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -25,11 +26,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             const email=credentials.email as string;
             const password=credentials.password as string;
 
-            if(!email || !password) throw new CredentialsSignin("Please Provide both email and password");
+            if(!email || !password) throw new CredentialsSignin("Please Provide both Email and Password");
+
+            await connectdb();
 
             const user= await User.findOne({email}).select("+password");
 
-            if(!user) throw new CredentialsSignin("Invalid Email or password");
+            if(!user) throw new CredentialsSignin("Email doesn't exist, Please Sign Up");
 
             if(!user.password) throw new CredentialsSignin("You signed in from Google earlier");
 
@@ -42,4 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
     })
   ],
+  pages:{
+    signIn:"/login",
+  }
 })

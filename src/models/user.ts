@@ -13,11 +13,12 @@ const Schema = new mongoose.Schema({
     type: String,
     select:false,
   },
+  googleId:{
+    type:String,
+    required:false
 
-  googleID: {
-    type: String,
-    required:true,
-  },
+  }
+
 });
 
 export const User=mongoose.models?.User || mongoose.model("User",Schema);
