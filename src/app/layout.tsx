@@ -1,18 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono,Comfortaa,} from "next/font/google";
+import {Comfortaa} from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import DarkModeProvider from "@/lib/darkmode";
-
-const geistSans = Inter({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Header from "@/components/home/Header";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -33,8 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${comfortaa.className} antialiased`}
+        className={` ${comfortaa.className}`}
       >
+        <Header/>
         <DarkModeProvider>
           {children}
         </DarkModeProvider>

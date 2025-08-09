@@ -1,12 +1,12 @@
-import Footer from '@/components/home/Footer'
-import Header from '@/components/home/Header'
+import Herosection from '@/components/home/Herosection'
+import FinueraAIHomepage from '@/components/home/Main'
 import React from 'react'
 
 const Home = () => {
   return (
     <div>
-      <Header/>
-      <Footer/>
+      <Herosection/>
+      <FinueraAIHomepage/>
     </div>
   )
 }

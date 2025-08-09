@@ -24,7 +24,7 @@ const Header = () => {
   const { dark, setdark } = useContext(DarkModeContext);
 
   return (
-    <div className="h-[9vh] border-2 flex justify-between px-3">
+    <div className="fixed z-9 bg-white dark:bg-black w-full h-[9vh] border-2 flex justify-between px-3">
       <div className="text-2xl flex justify-center items-center font-bold">
         <Link href={"/"}>
         Finuera<span className="text-blue-500">AI</span>
@@ -61,11 +61,11 @@ const Header = () => {
         </li>
       </ul>
 
-      <ul className={`${side? ("right-0"):("-right-[100%]")} fixed transition-all`}>
+      <ul className={`${side? ("right-0"):("-right-[100%]")} fixed transition-all z-10`}>
         <div className="bg-white dark:bg-black h-[100vh] w-[50vw] text-xl flex flex-col gap-2 p-4 justify-start pt-[120px] items-center">
           <X className="absolute top-5 right-5 cursor-pointer" onClick={()=>{setside(prev=>!prev)}} size={30}/>
           {sidebar.map((e, i) => (
-            <Link key={i} href={e.link}>
+            <Link key={i} href={e.link} onClick={()=>{setside(false)}}>
               <li>{e.title}</li>
             </Link>
           ))}

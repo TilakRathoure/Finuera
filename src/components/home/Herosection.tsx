@@ -1,0 +1,46 @@
+import {ArrowRight, Github } from "lucide-react";
+import React from "react";
+import { Button} from "../ui/button";
+import {Badge} from "@/components/ui/badge"
+
+const Herosection = () => {
+  return (
+    <section className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+        <div className="text-center">
+          <Badge
+            variant="secondary"
+            className="mb-8 bg-primary/10 text-primary border-primary/20"
+          >
+            Built with Advanced AI • Powered by VedAI
+          </Badge>
+
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
+            Master Finance with <br />
+            <span className="text-primary">AI-Powered</span> Insights
+          </h1>
+
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Upload your financial data and get personalized insights powered by
+            advanced AI. VedAI chatbot answers all your finance queries in
+            real-time with intelligent analysis.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button size="lg" className="group">
+              Try It Now
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button variant="outline" size="lg" className="group">
+              <Github className="w-5 h-5 mr-2" />
+              View on GitHub
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Herosection;
