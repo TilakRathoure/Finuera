@@ -81,7 +81,7 @@ const Features = () => {
           <div className="text-center mb-16">
             <Badge
               variant="secondary"
-              className="mb-4 bg-primary/10 border-primary/20"
+              className="mb-6 bg-primary/10 border-primary/20"
             >
               Core Features
             </Badge>
