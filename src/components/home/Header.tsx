@@ -11,8 +11,7 @@ interface Side {
 }
 
 const Header = () => {
-
-    const [side,setside]=useState<boolean>(false);
+  const [side, setside] = useState<boolean>(false);
 
   const sidebar: Side[] = [
     { title: "Features", link: "#feature" },
@@ -27,19 +26,16 @@ const Header = () => {
     <div className="fixed z-9 bg-white dark:bg-black w-full h-[9vh] border-2 flex justify-between px-3">
       <div className="text-2xl flex justify-center items-center font-bold">
         <Link href={"/"}>
-        Finuera<span className="text-blue-500">AI</span>
+          Finuera<span className="text-blue-500">AI</span>
         </Link>
       </div>
       <ul className="flex items-center gap-4">
-
         <ul className="hidden sm:flex gap-3">
-            {sidebar.map((e,i)=>(
-                <li key={i}>
-                    <Link href={e.link}>
-                    {e.title}
-                    </Link>
-                </li>
-            ))}
+          {sidebar.map((e, i) => (
+            <li key={i}>
+              <Link href={e.link}>{e.title}</Link>
+            </li>
+          ))}
         </ul>
 
         <li>
@@ -57,15 +53,35 @@ const Header = () => {
           {dark ? <Sun /> : <Moon className="" />}
         </li>
         <li className="cursor-pointer sm:hidden">
-          <Menu onClick={()=>{setside(prev=>!prev)}} />
+          <Menu
+            onClick={() => {
+              setside((prev) => !prev);
+            }}
+          />
         </li>
       </ul>
 
-      <ul className={`${side? ("right-0"):("-right-[100%]")} fixed transition-all z-10`}>
+      <ul
+        className={`${
+          side ? "right-0" : "-right-[100%]"
+        } fixed transition-all z-10`}
+      >
         <div className="bg-white dark:bg-black h-[100vh] w-[50vw] text-xl flex flex-col gap-2 p-4 justify-start pt-[120px] items-center">
-          <X className="absolute top-5 right-5 cursor-pointer" onClick={()=>{setside(prev=>!prev)}} size={30}/>
+          <X
+            className="absolute top-5 right-5 cursor-pointer"
+            onClick={() => {
+              setside((prev) => !prev);
+            }}
+            size={30}
+          />
           {sidebar.map((e, i) => (
-            <Link key={i} href={e.link} onClick={()=>{setside(false)}}>
+            <Link
+              key={i}
+              href={e.link}
+              onClick={() => {
+                setside(false);
+              }}
+            >
               <li>{e.title}</li>
             </Link>
           ))}

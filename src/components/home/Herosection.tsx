@@ -18,7 +18,7 @@ const Herosection = () => {
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
             Master Finance with <br />
-            <span className="text-primary">AI-Powered</span> Insights
+            <span >AI-Powered</span> Insights
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -30,10 +30,10 @@ const Herosection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" className="group">
               Try It Now
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1" />
             </Button>
             <Button variant="outline" size="lg" className="group">
-              <Github className="w-5 h-5 mr-2" />
+              <Github className="w-5 h-5 mr-2 group-hover:-translate-y-1" />
               View on GitHub
             </Button>
           </div>

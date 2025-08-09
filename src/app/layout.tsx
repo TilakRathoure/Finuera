@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import {Comfortaa} from "next/font/google";
+import { Comfortaa } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import DarkModeProvider from "@/lib/darkmode";
@@ -7,7 +7,7 @@ import Header from "@/components/home/Header";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
-  weight: 'variable',
+  weight: "variable",
   variable: "--font-comfortaa",
 });
 
@@ -23,14 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={` ${comfortaa.className}`}
-      >
-        <Header/>
+      <body className={` ${comfortaa.className}`}>
         <DarkModeProvider>
+          <Header />
           {children}
         </DarkModeProvider>
-        <Toaster position="bottom-center"/>
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );
