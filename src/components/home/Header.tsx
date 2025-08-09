@@ -23,43 +23,45 @@ const Header = () => {
   const { dark, setdark } = useContext(DarkModeContext);
 
   return (
-    <div className="fixed z-9 bg-white dark:bg-black w-full h-[9vh] border-2 flex justify-between px-3">
-      <div className="text-2xl flex justify-center items-center font-bold">
-        <Link href={"/"}>
-          Finuera<span className="text-blue-500">AI</span>
-        </Link>
-      </div>
-      <ul className="flex items-center gap-4">
-        <ul className="hidden sm:flex gap-3">
-          {sidebar.map((e, i) => (
-            <li key={i}>
-              <Link href={e.link}>{e.title}</Link>
-            </li>
-          ))}
-        </ul>
+    <div className="fixed z-9 w-full bg-white dark:bg-black border-b-2">
+      <div className="mx-auto h-[10vh] px-5 max-w-[80rem] flex justify-between">
+        <div className="text-2xl flex justify-center items-center font-bold">
+          <Link href={"/"}>
+            Finuera<span className="text-blue-500">AI</span>
+          </Link>
+        </div>
+        <ul className="flex items-center gap-4">
+          <ul className="hidden sm:flex gap-3">
+            {sidebar.map((e, i) => (
+              <li key={i}>
+                <Link href={e.link}>{e.title}</Link>
+              </li>
+            ))}
+          </ul>
 
-        <li>
-          <User
-            className="bg-slate-300 dark:bg-slate-800 rounded-full p-2"
-            size={35}
-          />
-        </li>
-        <li
-          className="cursor-pointer"
-          onClick={() => {
-            setdark((prev) => !prev);
-          }}
-        >
-          {dark ? <Sun /> : <Moon className="" />}
-        </li>
-        <li className="cursor-pointer sm:hidden">
-          <Menu
+          <li>
+            <User
+              className="bg-slate-300 dark:bg-slate-800 rounded-full p-2"
+              size={35}
+            />
+          </li>
+          <li
+            className="cursor-pointer"
             onClick={() => {
-              setside((prev) => !prev);
+              setdark((prev) => !prev);
             }}
-          />
-        </li>
-      </ul>
+          >
+            {dark ? <Sun /> : <Moon className="" />}
+          </li>
+          <li className="cursor-pointer sm:hidden">
+            <Menu
+              onClick={() => {
+                setside((prev) => !prev);
+              }}
+            />
+          </li>
+        </ul>
+      </div>
 
       <ul
         className={`${

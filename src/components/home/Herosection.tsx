@@ -1,24 +1,23 @@
-import {ArrowRight, Github } from "lucide-react";
+import { ArrowRight, Github } from "lucide-react";
 import React from "react";
-import { Button} from "../ui/button";
-import {Badge} from "@/components/ui/badge"
+import { Button } from "../ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const Herosection = () => {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent"></div>
+    <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
         <div className="text-center">
           <Badge
             variant="secondary"
-            className="mb-8 bg-primary/10 text-primary border-primary/20"
+            className="mt-2 mb-8 bg-primary/10 text-primary border-primary/20"
           >
             Built with Advanced AI • Powered by VedAI
           </Badge>
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
             Master Finance with <br />
-            <span >AI-Powered</span> Insights
+            <span>AI-Powered</span> Insights
           </h1>
 
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
