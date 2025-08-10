@@ -44,7 +44,7 @@ interface TechSectionComponentProps {
 }
 
 const TechSectionComponent = ({ section }: TechSectionComponentProps) => (
-  <Card className="bg-gradient-to-br from-background to-muted/20">
+  <Card className="bg-gradient-to-br from-background to-muted/20 w-full">
     <CardHeader>
       <CardTitle>{section.title}</CardTitle>
       <p className="text-muted-foreground">{section.description}</p>
