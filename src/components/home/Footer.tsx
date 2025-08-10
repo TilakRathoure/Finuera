@@ -16,9 +16,9 @@ const Footer = () => {
             Finuera<span className="text-primary">AI</span>
           </div>
           <div className="flex justify-center space-x-6 mb-6">
-            {footerLinks.map((link) => (
+            {footerLinks.map((link,i) => (
               <a
-                key={link.href}
+                key={i}
                 href={link.href}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
