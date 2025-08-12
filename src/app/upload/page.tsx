@@ -25,28 +25,31 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Homeinfo } from "@/lib/types";
+import { toast } from "sonner";
 
 const Homeabout: Homeinfo[] = [
   {
     title: "Smart Categorization",
-    description: "Automatically categorize your expenses with AI-powered insights",
+    description:
+      "Automatically categorize your expenses with AI-powered insights",
     icon: PieChart,
     color: "text-blue-500",
   },
   {
     title: "Visual Analytics",
-    description: "Beautiful charts and graphs to understand your spending patterns",
+    description:
+      "Beautiful charts and graphs to understand your spending patterns",
     icon: BarChart3,
     color: "text-green-500",
   },
   {
     title: "AI Financial Advisor",
-    description: "Get personalized financial advice from VedAI based on your data",
+    description:
+      "Get personalized financial advice from VedAI based on your data",
     icon: Brain,
     color: "text-purple-500",
   },
-]
-
+];
 
 const UploadPage = () => {
   const [dragActive, setDragActive] = useState(false);
@@ -69,24 +72,33 @@ const UploadPage = () => {
     e.stopPropagation();
     setDragActive(false);
 
-    const droppedFiles = Array.from(e.dataTransfer.files);
-    const validFile = droppedFiles.find(
-      (file) =>
-        file.type === "text/csv" ||
-        file.type === "application/pdf" ||
-        file.type.startsWith("image/")
-    );
+    const file = e.dataTransfer.files[0];
+
+    if (!file) return;
+
+    const validFile =
+      file.type == "text/csv" ||
+      file.type == "application/pdf" ||
+      file.type == "image/*";
 
     if (validFile) {
-      setFile(validFile);
-    }
+      setFile(file);
+    } else toast.error("only csv, pdf and images allowed");
   }, []);
 
   const handleFileInput = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files && e.target.files[0]) {
-        setFile(e.target.files[0]);
-      }
+      const file = e.target.files?.[0];
+
+      if (!file) return;
+
+      const validFile =
+        file.type == "text/csv" ||
+        file.type == "application/pdf" ||
+        file.type == "image/*";
+
+      if (validFile) setFile(file);
+      else toast.error("only csv, pdf and images allowed");
     },
     []
   );
@@ -117,12 +129,10 @@ const UploadPage = () => {
     if (!file) return;
 
     setUploading(true);
-    // Simulate upload process
     await new Promise((resolve) => setTimeout(resolve, 3000));
     setUploading(false);
     setUploadComplete(true);
 
-    // Reset after showing success
     setTimeout(() => {
       setUploadComplete(false);
       setFile(null);
@@ -147,7 +157,7 @@ const UploadPage = () => {
             <div
               className={`relative border-2 border-dashed rounded-lg m-6 p-8 text-center transition-all duration-200 ${
                 dragActive
-                  ? "border-blue-900 bg-blue-50 dark:bg-blue-950/20"
+                  ? "border-blue-600 bg-blue-50 dark:bg-blue-950/20"
                   : "border-muted-foreground/25 hover:border-blue-400"
               }`}
               onDragEnter={handleDrag}
@@ -182,6 +192,13 @@ const UploadPage = () => {
                       variant="outline"
                       className="flex items-center space-x-1"
                     >
+                      <Image className="h-3 w-3 text-blue-500" />
+                      <span>Images</span>
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="flex items-center space-x-1"
+                    >
                       <FileText className="h-3 w-3 text-green-500" />
                       <span>CSV</span>
                     </Badge>
@@ -192,13 +209,6 @@ const UploadPage = () => {
                       <File className="h-3 w-3 text-red-500" />
                       <span>PDF</span>
                     </Badge>
-                    <Badge
-                      variant="outline"
-                      className="flex items-center space-x-1"
-                    >
-                      <Image className="h-3 w-3 text-blue-500" />
-                      <span>Images</span>
-                    </Badge>
                   </div>
                 </div>
               </div>
@@ -206,7 +216,6 @@ const UploadPage = () => {
           </CardContent>
         </Card>
 
-        {/* Selected File Card */}
         {file && (
           <Card className="mb-8">
             <CardHeader>
@@ -237,7 +246,6 @@ const UploadPage = () => {
           </Card>
         )}
 
-        {/* Upload Button */}
         {file && (
           <div className="text-center mb-8">
             <Button
@@ -266,26 +274,20 @@ const UploadPage = () => {
           </div>
         )}
 
-        {/* Features Section */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {Homeabout.map((e,i) => (
+          {Homeabout.map((e, i) => (
             <Card key={i} className="text-center">
               <CardContent className="pt-6">
                 <div className="inline-flex items-center justify-center p-3 bg-green-50 dark:bg-green-950/50 rounded-full mb-4">
                   <e.icon className={`h-6 w-6 ${e.color}`} />
                 </div>
-                <CardTitle className="text-base mb-2">
-                  {e.title}
-                </CardTitle>
-                <CardDescription>
-                  {e.description}
-                </CardDescription>
+                <CardTitle className="text-base mb-2">{e.title}</CardTitle>
+                <CardDescription>{e.description}</CardDescription>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* Tips Alert */}
         <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
           <AlertCircle className="h-4 w-4 text-blue-600" />
           <AlertDescription className="text-blue-800 dark:text-blue-200">
@@ -297,7 +299,7 @@ const UploadPage = () => {
                   description
                 </li>
                 <li>
-                  PDF bank statements work best when theyapos&;re text-based
+                  PDF bank statements work best when they&apos;re text-based
                   (not scanned images)
                 </li>
                 <li>For photos, ensure receipts are clear and well-lit</li>
