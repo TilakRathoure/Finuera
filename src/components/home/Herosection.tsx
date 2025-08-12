@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Herosection = () => {
   return (
-    <section className="h-screen flex justify-center items-center  overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent">
+    <section className="h-screen flex justify-center items-center  overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent pt-7">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
         <div className="text-center">
           <Badge
@@ -16,7 +16,7 @@ const Herosection = () => {
             Built with Gemini • Powered by VedAI
           </Badge>
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
+          <h1 className=" text-[42px] leading-tight md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
             Master Finance with <br />
             <span>AI-Powered</span> Insights
           </h1>

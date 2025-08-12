@@ -23,7 +23,7 @@ const Header = () => {
   const { dark, setdark } = useContext(DarkModeContext);
 
   return (
-    <div className="fixed z-9 w-full bg-white dark:bg-black border-b-2">
+    <div className="fixed z-5 w-full bg-white dark:bg-black border-b-2">
       <div className="mx-auto h-[10vh] px-5 max-w-[80rem] flex justify-between">
         <div className="text-2xl flex justify-center items-center font-bold">
           <Link href={"/"}>
@@ -64,9 +64,9 @@ const Header = () => {
       </div>
 
       <ul
-        className={`${
+        className={`z-50 fixed ${
           side ? "right-0" : "-right-[100%]"
-        } fixed transition-all z-10`}
+        } transition-all`}
       >
         <div className="bg-white dark:bg-black h-[100vh] w-[50vw] text-xl flex flex-col gap-2 p-4 justify-start pt-[120px] items-center">
           <X
