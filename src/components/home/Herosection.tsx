@@ -2,6 +2,7 @@ import { ArrowRight, Github } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 const Herosection = () => {
   return (
@@ -27,10 +28,12 @@ const Herosection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button size="lg" className="group">
-              Try It Now
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1" />
-            </Button>
+            <Link href="/upload">
+              <Button size="lg" className="group">
+                Try It Now
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1" />
+              </Button>
+            </Link>
             <Button variant="outline" size="lg" className="group">
               <Github className="w-5 h-5 mr-2 group-hover:-translate-y-1" />
               View on GitHub
