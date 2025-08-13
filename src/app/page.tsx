@@ -5,7 +5,6 @@ import Herosection from '@/components/home/Herosection'
 import Howitworks from '@/components/home/howItworks'
 import Technology from '@/components/home/Technology'
 import React from 'react'
-import VedAi from "@/components/chatbot/VedAI"
 
 const Home = () => {
   return (
