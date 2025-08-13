@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import DarkModeProvider from "@/lib/darkmode";
 import Header from "@/components/home/Header";
+import VedAI from "@/components/chatbot/VedAI";
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className={` ${comfortaa.className}`}>
         <DarkModeProvider>
           <Header />
+          <VedAI/>
           {children}
         </DarkModeProvider>
         <Toaster position="bottom-center" />

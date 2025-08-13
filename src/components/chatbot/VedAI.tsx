@@ -13,45 +13,49 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, UIMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ArrowDownCircleIcon,
-  LoaderCircle,
-  MessageCircle,
-  Send,
-} from "lucide-react";
+import { LoaderCircle, Send } from "lucide-react";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import Image from "next/image";
-import { FaSquareGithub } from "react-icons/fa6";
+import { RiChat1Fill } from "react-icons/ri";
 
 const Home = () => {
   const [chat, setChat] = useState(false);
 
-  const { messages, status, stop, error,sendMessage } = useChat({
+  const { messages, status, stop, error, sendMessage } = useChat({
     transport: new DefaultChatTransport({
-      api: "/api/",
+      api: "/api/chatbot",
     }),
   });
 
   const [input, handleInputChange] = useState<string>("");
 
   const firstmessage: UIMessage[] = [
-    { id: "453363", role: "assistant",parts:[ {text:"Hey how can i help you?",type:"text"}] },
+    {
+      id: "453363",
+      role: "assistant",
+      parts: [{ text: "Hey, I'm VedAI. How can i help you?", type: "text" }],
+    },
     ...messages,
   ];
 
-  const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (input.trim()) {
-    sendMessage({ text: input });
-    handleInputChange('');
+      sendMessage({ text: input });
+      handleInputChange("");
     }
-    
-  }
+  };
 
   return (
-    <div className="relative text-white min-h-screen bg-black overflow-hidden">
-      <div className="relative z-10 md:px-[100px] lg:px-[150px] px-8 py-[100px] min-h-screen">
+    <div className="fixed flex  bottom-10 z-20 text-6xl right-10 cursor-pointer border-primary rounded-full">
+      <div className=""
+        onClick={() => {
+          setChat((prev) => !prev);
+        }}
+      >
+        <RiChat1Fill className="" />
+      </div>
+      <div className={`fixed z-20 ${!chat && "hidden"} bottom-25 right-5`}>
         <AnimatePresence>
           {chat && (
             <motion.div
@@ -59,7 +63,7 @@ const Home = () => {
               transition={{ duration: 0.2 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
-              className="fixed right-6 md:right-[100px] lg:right-[150px] top-25 z-20"
+              className=""
             >
               <Card className="w-[60vw] max-w-[500px]">
                 <CardHeader className="flex justify-between">
@@ -74,17 +78,20 @@ const Home = () => {
                 <CardContent>
                   <ScrollArea className="h-[300px] pr-2">
                     <div className="flex flex-col gap-5">
-                      {firstmessage.map((e, i) => (
+                      {firstmessage.map((e) => (
                         <div
                           key={e.id}
-                          className={`text-white px-4 p-2 rounded-2xl ${
+                          className={`px-4 p-2 rounded-2xl text-base text-white ${
                             e.role !== "user"
-                              ? "self-start bg-gray-500"
+                              ? "self-start bg-gray-500 "
                               : "self-end bg-black"
                           }`}
-                        >{e.parts.map((part,i)=>
-                            part.type==="text" ?(<ReactMarkdown key={i}>{part.text}</ReactMarkdown>): null
-                        )}
+                        >
+                          {e.parts.map((part, i) =>
+                            part.type === "text" ? (
+                              <ReactMarkdown key={i}>{part.text}</ReactMarkdown>
+                            ) : null
+                          )}
                         </div>
                       ))}
                     </div>
@@ -99,19 +106,22 @@ const Home = () => {
                   <form onSubmit={handleSubmit} className="flex w-full gap-2">
                     <Input
                       value={input}
-                      onChange={(e)=>{handleInputChange(e.target.value)}}
-                      className="flex-1"
+                      onChange={(e) => {
+                        handleInputChange(e.target.value);
+                      }}
+                      className="flex-1 text-sm"
                       placeholder="Type your message here..."
                     />
                     <Button
                       type="submit"
                       className="size-9"
                       onClick={() => {
-                        if (status==="submitted" || status==="streaming") stop();
+                        if (status === "submitted" || status === "streaming")
+                          stop();
                       }}
                       size="icon"
                     >
-                      {status==="error" || status==="ready" ? (
+                      {status === "error" || status === "ready" ? (
                         <Send />
                       ) : (
                         <LoaderCircle className="animate-spin" />
@@ -123,36 +133,6 @@ const Home = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        <h2 className="flex justify-end pb-2 text-3xl font-bold tracking-tight p-4">
-          VedAI.
-        </h2>
-
-        <p className="text-lg font-light my-5 mb-10">
-          VedAI is an AI-powered chatbot built using Google&apos;s Gemini 1.5
-          Flash model and integrated with the Vercel AI SDK for seamless
-          performance. Whether you&apos;re chatting, learning, or exploring,
-          VedAI is here to assist with speed, accuracy, and a growing
-          understanding of the world around you.
-        </p>
-        <div className="w-full flex justify-around">
-          <Button
-            onClick={() => setChat(!chat)}
-            className="w-[100px] h-[45px]"
-            variant="secondary"
-          >
-            VedAI {chat ? <ArrowDownCircleIcon /> : <MessageCircle />}
-          </Button>
-          <a href="https://github.com/TilakRathoure/VedAI" target="_blank">
-            <Button
-              className="bg-black border-1 w-[100px] h-[45px] border-white text-white"
-              variant={"outline"}
-            >
-              <FaSquareGithub size={40} className="text-white " />
-              GitHub
-            </Button>
-          </a>
-        </div>
       </div>
     </div>
   );
