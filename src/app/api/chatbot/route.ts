@@ -7,6 +7,8 @@ const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY!,
 });
 
+export const runtime="edge";
+
 export const POST = async (req: Request) => {
   const { messages } = await req.json();
 
