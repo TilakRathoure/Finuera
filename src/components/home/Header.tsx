@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import { Menu, Moon, Sun, User, X } from "lucide-react";
 import { DarkModeContext } from "@/lib/darkmode";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 interface Side {
   title: string;
@@ -11,10 +12,19 @@ interface Side {
 }
 
 const Header = () => {
+
+  const moveto=(title:string,link :string)=>{
+
+    if(title!= "Technology" && title!= "Features") return redirect(link);
+
+    redirect("/"+link);
+
+  }
+
   const [side, setside] = useState<boolean>(false);
 
   const sidebar: Side[] = [
-    { title: "Features", link: "#feature" },
+    { title: "Features", link: "#features" },
     { title: "Technology", link: "#technology" },
     { title: "Pricing", link: "#pricing" },
     { title: "Log In", link: "/login" },
@@ -33,8 +43,8 @@ const Header = () => {
         <ul className="flex items-center gap-4">
           <ul className="hidden sm:flex gap-3">
             {sidebar.map((e, i) => (
-              <li key={i}>
-                <Link href={e.link}>{e.title}</Link>
+              <li key={i} className="cursor-pointer" onClick={()=>{moveto(e.title,e.link)}}>
+              {e.title}
               </li>
             ))}
           </ul>
