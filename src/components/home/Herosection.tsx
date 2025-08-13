@@ -34,10 +34,12 @@ const Herosection = () => {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Button variant="outline" size="lg" className="group">
-              <Github className="w-5 h-5 mr-2 group-hover:-translate-y-1" />
-              View on GitHub
-            </Button>
+            <a href="https://github.com/TilakRathoure/Finuera" target="_blank">
+              <Button variant="outline" size="lg" className="group">
+                <Github className="w-5 h-5 mr-2 group-hover:-translate-y-1" />
+                View on GitHub
+              </Button>
+            </a>
           </div>
         </div>
       </div>

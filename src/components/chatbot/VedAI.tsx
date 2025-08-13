@@ -14,12 +14,13 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, UIMessage } from "ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle, Send } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { RiChat1Fill } from "react-icons/ri";
+import { DarkModeContext } from "@/lib/darkmode";
 
 const Home = () => {
-  const [chat, setChat] = useState(false);
+  const {chat, setChat} = useContext(DarkModeContext);
 
   const { messages, status, stop, error, sendMessage } = useChat({
     transport: new DefaultChatTransport({
@@ -47,15 +48,15 @@ const Home = () => {
   };
 
   return (
-    <div className="fixed flex  bottom-10 z-20 text-6xl right-10 cursor-pointer border-primary rounded-full">
-      <div className=""
+    <div className="fixed flex  bottom-10 z-20 text-4xl right-10">
+      <div className="cursor-pointer bg-black dark:bg-white border-primary rounded-full p-3"
         onClick={() => {
           setChat((prev) => !prev);
         }}
       >
-        <RiChat1Fill className="" />
+        <RiChat1Fill className="text-white dark:text-black" />
       </div>
-      <div className={`fixed z-20 ${!chat && "hidden"} bottom-25 right-5`}>
+      <div className={`fixed z-20 bottom-25 right-5`}>
         <AnimatePresence>
           {chat && (
             <motion.div

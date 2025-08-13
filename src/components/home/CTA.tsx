@@ -1,8 +1,10 @@
-import React from 'react'
+'use client'
+import React, { useContext } from 'react'
 import { Button } from '../ui/button';
 import { CTAButton } from '@/lib/types';
 import { ArrowRight, MessageSquare } from 'lucide-react';
-
+import { redirect } from 'next/navigation';
+import { DarkModeContext } from '@/lib/darkmode';
 interface CTAButtonComponentProps {
   button: CTAButton;
 }
@@ -12,21 +14,29 @@ const ctaButtons: CTAButton[] = [
     text: 'Start Your Free Trial',
     icon: ArrowRight,
     variant: 'default',
-    iconPosition: 'right'
+    iconPosition: 'right',
   },
   {
     text: 'Chat with VedAI',
     icon: MessageSquare,
     variant: 'outline',
-    iconPosition: 'left'
+    iconPosition: 'left',
   }
 ];
 
-const CTAButtonComponent: React.FC<CTAButtonComponentProps> = ({ button } : CTAButtonComponentProps) => {
+const CTAButtonComponent = ({ button } : CTAButtonComponentProps) => {
+
+  const {setChat}= useContext(DarkModeContext);
+
+  const handlefunction=(variant:string)=>{
+    if(variant!=="outline") return redirect("/login");
+    else setChat(true);
+  }
+
   const Icon = button.icon;
   
   return (
-    <Button variant={button.variant} size="lg" className="group">
+    <Button variant={button.variant} size="lg" className="group" onClick={()=>handlefunction(button.variant)}>
       {button.iconPosition === 'left' && Icon && <Icon className="w-5 h-5 mr-2" />}
       {button.text}
       {button.iconPosition === 'right' && Icon && (
@@ -44,7 +54,7 @@ const CTA = () => {
               Ready to Transform Your <span className="text-primary">Financial Journey</span>?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of users who trust FinueraAI for intelligent financial insights and personalized guidance.
+              Join thousands of users who trust Finuera for intelligent financial insights and personalized guidance.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

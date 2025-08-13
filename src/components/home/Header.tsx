@@ -12,21 +12,17 @@ interface Side {
 }
 
 const Header = () => {
-
-  const moveto=(title:string,link :string)=>{
-
-    if(title!= "Technology" && title!= "Features") return redirect(link);
-
-    redirect("/"+link);
-
-  }
+  const moveto = (link: string) => {
+    setside(false);
+    redirect(link);
+  };
 
   const [side, setside] = useState<boolean>(false);
 
   const sidebar: Side[] = [
-    { title: "Features", link: "#features" },
-    { title: "Technology", link: "#technology" },
-    { title: "Pricing", link: "#pricing" },
+    { title: "Features", link: "/#features" },
+    { title: "Technology", link: "/#technology" },
+    { title: "Pricing", link: "/price" },
     { title: "Log In", link: "/login" },
   ];
 
@@ -37,15 +33,19 @@ const Header = () => {
       <div className="mx-auto h-[10vh] px-5 max-w-[80rem] flex justify-between">
         <div className="text-2xl flex justify-center items-center font-bold">
           <Link href={"/"}>
-            Finuera<span className="text-blue-500">AI</span>
+            Finu<span className="text-blue-500">era</span>
           </Link>
         </div>
         <ul className="flex items-center gap-4">
           <ul className="hidden sm:flex gap-3">
             {sidebar.map((e, i) => (
-              <li key={i} className="cursor-pointer" onClick={()=>{moveto(e.title,e.link)}}>
-              {e.title}
-              </li>
+                <li key={i} onClick={() => {
+                    moveto( e.link);
+                  }}
+                  className="cursor-pointer"
+                >
+                  {e.title}
+                </li>
             ))}
           </ul>
 
@@ -87,15 +87,7 @@ const Header = () => {
             size={30}
           />
           {sidebar.map((e, i) => (
-            <Link
-              key={i}
-              href={e.link}
-              onClick={() => {
-                setside(false);
-              }}
-            >
-              <li>{e.title}</li>
-            </Link>
+              <li key={i} className="cursor-pointer" onClick={()=>moveto(e.link)}>{e.title}</li>
           ))}
         </div>
       </ul>

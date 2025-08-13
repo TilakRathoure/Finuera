@@ -19,7 +19,7 @@ const featureCards: FeatureCard[] = [
     icon: MessageSquare,
     title: 'VedAI Chat Assistant',
     description: 'Ask any finance question and get intelligent responses. VedAI understands context and provides personalized financial advice.',
-    actionText: 'Powered by Gemini 1.5 Flash',
+    actionText: 'Powered by Gemini 2.5 Flash',
     iconBg: 'bg-emerald-500/10 border-emerald-500/20',
     iconColor: 'text-emerald-600 dark:text-emerald-400',
   },
@@ -86,7 +86,7 @@ const Features = () => {
               Core Features
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              How Finuera<span className="text-blue-500">AI</span> Transforms
+              How Finu<span className="text-blue-500">era</span> Transforms
               Your Financial Journey
             </h2>
             <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
