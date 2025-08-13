@@ -18,11 +18,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-const SignupPage=()=>{
+const SignupPage = () => {
+  // // const session=await auth();
 
-    // // const session=await auth();
-
-    // if(session?.user) return redirect("/");
+  // if(session?.user) return redirect("/");
 
   return (
     <div className="bg-black h-screen flex justify-center items-center">
@@ -45,21 +44,22 @@ const SignupPage=()=>{
             const password = formdata.get("password") as string;
 
             if (!name || !email || !password) {
-              return toast.error("Please fill all fields");
+              toast.error("Please fill all fields");
+              return;
             }
             const loa = toast.loading("creating");
 
             const check = await signup(name, email, password);
 
             if (check)
-              return toast.error(check, {
+              toast.error(check, {
                 id: loa,
               });
             else
               toast.success("Success", {
                 id: loa,
               });
-              redirect("/login");
+            redirect("/login");
           }}
         >
           <CardContent>
@@ -92,6 +92,6 @@ const SignupPage=()=>{
       </Card>
     </div>
   );
-}
+};
 
 export default SignupPage;

@@ -17,7 +17,6 @@ import Link from "next/link";
 import { toast } from "sonner";
 
 function CardDemo() {
-
   return (
     <div className="bg-black h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm ">
@@ -32,24 +31,29 @@ function CardDemo() {
             </Link>
           </CardAction>
         </CardHeader>
-        <form action={async(formdata:FormData)=>{
+        <form
+          action={async (formdata: FormData) => {
+            const email = formdata.get("email") as string;
+            const password = formdata.get("password") as string;
 
-                const email = formdata.get("email") as string;
-    const password = formdata.get("password") as string;
+            if (!email || !password) {
+              toast.error("Please provide all fields");
+              return;
+            }
 
-    if (!email || !password) return toast.error("Please provide all fields");
+            const get = await login(email, password);
 
-    const get =await login(email,password);
+            if (get) {
+              toast.error(get);
+              return;
+            }
 
-    if(get) return toast.error(get);
+            toast.success("successs");
 
-    toast.success("successs");
-
-    redirect("/");
-
-
-        }}>
-        <CardContent>
+            redirect("/");
+          }}
+        >
+          <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -62,16 +66,15 @@ function CardDemo() {
                 <Input id="password" type="password" name="password" />
               </div>
             </div>
-        </CardContent>
-        <CardFooter className="flex-col gap-2 mt-5">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
-
+          </CardContent>
+          <CardFooter className="flex-col gap-2 mt-5">
+            <Button type="submit" className="w-full">
+              Login
+            </Button>
+            <Button variant="outline" className="w-full">
+              Login with Google
+            </Button>
+          </CardFooter>
         </form>
       </Card>
     </div>
