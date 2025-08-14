@@ -1,7 +1,7 @@
 "use client";
 
 import { signup } from "@/actions/server";
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
