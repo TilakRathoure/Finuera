@@ -57,7 +57,7 @@ Your mission is to make finance **understandable, interactive, concise, and pers
 
 
 
-const google = createGoogleGenerativeAI({
+export const google = createGoogleGenerativeAI({
   apiKey: process.env.GOOGLE_API_KEY!,
 });
 
