@@ -126,17 +126,9 @@ const UploadPage = () => {
   };
 
   const handleUpload = async () => {
-    if (!file) return;
 
-    setUploading(true);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    setUploading(false);
-    setUploadComplete(true);
+    if(!file) return toast.error("No file added");
 
-    setTimeout(() => {
-      setUploadComplete(false);
-      setFile(null);
-    }, 2000);
   };
 
   return (
