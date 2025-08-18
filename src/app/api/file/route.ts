@@ -18,8 +18,46 @@ export const POST=async(request: NextRequest)=>{
     const formData = await request.formData();
     const file = formData.get('file') as File;
     
-    const instructions ='Analyze this file and provide a comprehensive summary of its contents.';
+    const instructions = `
+Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the following information in JSON format:
 
+1. Calculate the total amount spent across all transactions
+2. Group spending by month and calculate monthly totals
+3. Categorize each transaction into one of these categories: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense
+4. Give a tip on based on the spending in about 100 words;
+5. And chart config for categarires and their spending with a random colour;
+
+Return ONLY valid JSON in this exact format:
+{
+  "totalAmount": number,
+  "monthlySpending": [
+    {"month": "January", "spent": number},
+    {"month": "February", "spent": number}
+  ],
+  "categories": [
+    {"category": "groceries", "amount": number},
+    {"category": "transportation", "amount": number}
+  ],
+  "tip": "string",
+
+  "chartconfig:{
+
+  groceries: {
+    label: "Groceries",
+    color: "#1e3a8a",
+  },
+
+  transportation: {
+    label: "Transportation",
+    color: "#3b82f6", 
+  }
+  }
+  }
+
+If this is not a financial document or contains no financial data, return: {"error": "No financial data found"}
+
+Do not include any explanation, only return the JSON.
+`;
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
@@ -88,15 +126,11 @@ export const POST=async(request: NextRequest)=>{
         response = result.text;
       }
 
+      response=JSON.parse(response.substring(8,response.length-5));
+
       return NextResponse.json({
         success: true,
-        data: {
-          fileName: file.name,
-          fileSize: file.size,
-          fileType: file.type,
-          instructions: instructions,
-          response: response.trim()
-        }
+        data: response
       });
 
     } catch (aiError) {
