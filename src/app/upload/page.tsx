@@ -57,7 +57,7 @@ const UploadPage = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
+  const handleDrag =(e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -65,43 +65,34 @@ const UploadPage = () => {
     } else if (e.type === "dragleave") {
       setDragActive(false);
     }
-  }, []);
+  };
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
+  const handleDrop =(e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
-    const file = e.dataTransfer.files[0];
+    handleFileInput();
 
-    if (!file) return;
+  };
 
-    const validFile =
-      file.type == "text/csv" ||
-      file.type == "application/pdf" ||
-      file.type == "image/*";
-
-    if (validFile) {
-      setFile(file);
-    } else toast.error("only csv, pdf and images allowed");
-  }, []);
-
-  const handleFileInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
+  const handleFileInput =
+    (e?: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e?.target.files?.[0];
 
       if (!file) return;
 
       const validFile =
         file.type == "text/csv" ||
         file.type == "application/pdf" ||
-        file.type == "image/*";
+file.type.startsWith("image/")
 
       if (validFile) setFile(file);
-      else toast.error("only csv, pdf and images allowed");
-    },
-    []
-  );
+      else{
+        toast.error("only csv, pdf and images allowed");
+        console.log(file.type);
+      }
+    }
 
   const removeFile = () => {
     setFile(null);
@@ -128,6 +119,9 @@ const UploadPage = () => {
   const handleUpload = async () => {
 
     if(!file) return toast.error("No file added");
+
+    
+
 
   };
 
