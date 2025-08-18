@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Herosection = () => {
   return (
-    <section className="h-screen flex justify-center items-center  overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent pt-7">
+    <section className="h-screen flex justify-center items-center  overflow-hidden bg-gradient-to-br from-primary/10 via-primary/5 to-transparent dark:from-primary/20 dark:via-primary/10 dark:to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
         <div className="text-center">
           <Badge

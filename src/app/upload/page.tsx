@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Upload,
   FileText,
@@ -24,8 +24,10 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Homeinfo } from "@/lib/types";
+import { ErrResponse, Homeinfo } from "@/lib/types";
 import { toast } from "sonner";
+import axios, { AxiosError } from "axios";
+import Link from "next/link";
 
 const Homeabout: Homeinfo[] = [
   {
@@ -119,11 +121,37 @@ file.type.startsWith("image/")
   const handleUpload = async () => {
 
     if(!file) return toast.error("No file added");
+    setUploading(true);
 
+    try{
+
+      const formdata=new FormData();
+      formdata.set("file",file);
+      
+      const {data} =await axios.post("api/file",formdata);
+
+      console.log(data);
+      setUploadComplete(true);
+
+    }catch(error){
+      console.log(error);
+      const err=error as AxiosError;
+      const message=err.response?.data as ErrResponse;
+      toast.error(message.message);
+    }
     
+    finally{
+      setUploading(false);
+    }
 
 
   };
+
+  useEffect(()=>{
+
+    window.scrollTo(0,200)
+
+  },[file])
 
   return (
     <div className="min-h-screen bg-background pt-[80px]">
@@ -138,6 +166,7 @@ file.type.startsWith("image/")
           </p>
         </div>
 
+        
         <Card className="mb-8 bg-gradient-to-br from-primary/20 via-primary/12 to-primary/0">
           <CardContent className="p-0">
             <div
@@ -236,7 +265,7 @@ file.type.startsWith("image/")
           <div className="text-center mb-8">
             <Button
               onClick={handleUpload}
-              disabled={uploading || uploadComplete}
+              disabled={uploading}
               size="lg"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8"
             >
@@ -246,10 +275,10 @@ file.type.startsWith("image/")
                   Processing...
                 </>
               ) : uploadComplete ? (
-                <>
+                <Link href="/dashboard" className="flex">
                   <Check className="mr-2 h-4 w-4" />
                   Upload Complete!
-                </>
+                </Link>
               ) : (
                 <>
                   <Upload className="mr-2 h-4 w-4" />

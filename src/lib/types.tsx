@@ -58,3 +58,17 @@ export interface FooterLink {
   label: string;
   href: string;
 };
+
+export interface ErrResponse{
+  message:string;
+}
+
+export interface AIResponse {
+  totalAmount?: number;
+  monthlySpending?: { month: string; spent: number }[];
+  categories?: { category: string; amount: number }[];
+  tip?: string;
+  chartconfig?: [{ label: string; color: string }];
+  error: string;
+}
+

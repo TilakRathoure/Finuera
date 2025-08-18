@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {google} from "@/app/api/chatbot/route";
 import { generateText } from 'ai';
+import { AIResponse } from '@/lib/types';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const SUPPORTED_TYPES = [
@@ -29,6 +30,7 @@ Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the
 
 Return ONLY valid JSON in this exact format:
 {
+"error":false,
   "totalAmount": number,
   "monthlySpending": [
     {"month": "January", "spent": number},
@@ -54,7 +56,7 @@ Return ONLY valid JSON in this exact format:
   }
   }
 
-If this is not a financial document or contains no financial data, return: {"error": "No financial data found"}
+If this is not a financial document or contains no financial data, return: {"error":true}
 
 Do not include any explanation, only return the JSON.
 `;
@@ -126,7 +128,13 @@ Do not include any explanation, only return the JSON.
         response = result.text;
       }
 
-      response=JSON.parse(response.substring(8,response.length-5));
+      const newres=JSON.parse(response.substring(8,response.length-4)) as AIResponse;
+
+      if(newres.error){
+        return NextResponse.json({
+          message:"No Financial data found",
+        },{status:500})
+      }
 
       return NextResponse.json({
         success: true,

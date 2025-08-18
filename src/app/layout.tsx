@@ -30,7 +30,7 @@ export default function RootLayout({
           <VedAI/>
           {children}
         </DarkModeProvider>
-        <Toaster position="bottom-center" />
+        <Toaster position="bottom-center" offset="50px" />
       </body>
     </html>
   );
