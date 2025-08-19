@@ -17,6 +17,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useContext } from "react";
+import { DarkModeContext } from "@/lib/darkmode";
 
 const chartData = [
   { month: "January", desktop: 186 },
@@ -35,7 +37,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 
-const chartData1 = [
+
+const Dashboard = () => {
+
+  const chartData1 = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
   { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
   { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
@@ -43,7 +48,7 @@ const chartData1 = [
   { browser: "other", visitors: 90, fill: "var(--color-other)" },
 ]
 
-const chartConfig1 = {
+  const chartConfig1 = {
   visitors: {
     label: "Visitors",
   },
@@ -69,8 +74,10 @@ const chartConfig1 = {
   },
 } satisfies ChartConfig;
 
+  const {dashboard}= useContext(DarkModeContext);
 
-const Dashboard = () => {
+  console.log(dashboard);
+
   return (
     <div className="pt-20 flex flex-col gap-5">
 
@@ -114,7 +121,7 @@ const Dashboard = () => {
         <Card className="md:w-1/2 bg-yellow-100 pt-4">
             <CardHeader><CardTitle><Lightbulb /></CardTitle></CardHeader>
             <CardContent>
-
+              {dashboard?.tip}
             </CardContent>
 
         </Card>
@@ -173,6 +180,8 @@ const Dashboard = () => {
           </div>
         </CardFooter>
       </Card>
+
+      {/* PIECHART */}
 
             <Card className="md:w-1/2 flex flex-col ">
         <CardHeader className="items-center pb-0">

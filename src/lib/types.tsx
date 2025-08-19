@@ -63,6 +63,20 @@ export interface ErrResponse{
   message:string;
 }
 
+interface charinfo{
+  label:string,
+  color:string,
+}
+
+export interface Dashboard{
+  error: boolean,
+  totalAmount:number,
+  monthlySpending:{month:string, spent:number}[],
+  categories:{categories:string, amount:number}[],
+  tip:string,
+  chartconfig:{housing?:charinfo, transportation?:charinfo, groceries?:charinfo, utilities?:charinfo, entertainment?:charinfo, food?:charinfo, shopping?:charinfo, healthcare?:charinfo, education?:charinfo, personal?:charinfo, travel?:charinfo, insurance?:charinfo, gifts?:charinfo, bills?:charinfo, "other-expense"?:charinfo}
+}
+
 export interface AIResponse {
   totalAmount?: number;
   monthlySpending?: { month: string; spent: number }[];

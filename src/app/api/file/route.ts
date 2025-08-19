@@ -28,7 +28,7 @@ Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the
 4. Give a tip on based on the spending in about 100 words;
 5. And chart config for categarires and their spending with a random colour;
 
-Return ONLY valid JSON in this exact format:
+Return:
 {
 "error":false,
   "totalAmount": number,
@@ -128,7 +128,7 @@ Do not include any explanation, only return the JSON.
         response = result.text;
       }
 
-      const newres=JSON.parse(response.substring(8,response.length-4)) as AIResponse;
+      const newres=JSON.parse(response.replace(/```(?:json)?\n?/g,"").trim()) as AIResponse;
 
       if(newres.error){
         return NextResponse.json({
@@ -138,7 +138,7 @@ Do not include any explanation, only return the JSON.
 
       return NextResponse.json({
         success: true,
-        data: response
+        data:newres
       });
 
     } catch (aiError) {

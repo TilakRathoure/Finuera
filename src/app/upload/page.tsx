@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Upload,
   FileText,
@@ -24,10 +24,12 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { ErrResponse, Homeinfo } from "@/lib/types";
+import { Dashboard, ErrResponse, Homeinfo } from "@/lib/types";
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
+import { DarkModeContext } from "@/lib/darkmode";
+import { redirect } from "next/navigation";
 
 const Homeabout: Homeinfo[] = [
   {
@@ -58,6 +60,8 @@ const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
+
+  const {setdashboard}=useContext(DarkModeContext);
 
   const handleDrag =(e: React.DragEvent) => {
     e.preventDefault();
@@ -130,11 +134,13 @@ file.type.startsWith("image/")
       
       const {data} =await axios.post("api/file",formdata);
 
-      console.log(data);
+      console.log(data.data);
+      setdashboard(data.data);
+
       setUploadComplete(true);
 
+
     }catch(error){
-      console.log(error);
       const err=error as AxiosError;
       const message=err.response?.data as ErrResponse;
       toast.error(message.message);
@@ -148,6 +154,8 @@ file.type.startsWith("image/")
   };
 
   useEffect(()=>{
+
+    if(!file) return;
 
     window.scrollTo(0,200)
 
@@ -277,7 +285,7 @@ file.type.startsWith("image/")
               ) : uploadComplete ? (
                 <Link href="/dashboard" className="flex">
                   <Check className="mr-2 h-4 w-4" />
-                  Upload Complete!
+                  Upload Complete! Click for Dashboard
                 </Link>
               ) : (
                 <>
