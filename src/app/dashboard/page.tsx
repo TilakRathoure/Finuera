@@ -72,7 +72,7 @@ const chartConfig1 = {
 } satisfies ChartConfig;
 
 
-const dashboard = () => {
+const Dashboard = () => {
   return (
     <div className="pt-20 flex flex-col gap-5">
 
@@ -212,4 +212,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
