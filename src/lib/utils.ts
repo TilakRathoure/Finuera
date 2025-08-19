@@ -1,3 +1,4 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { clsx, type ClassValue } from "clsx";
 import mongoose from "mongoose";
 import { twMerge } from "tailwind-merge";
@@ -22,3 +23,8 @@ export const connectdb = async () => {
     console.log("error while connecting database", error);
   }
 };
+
+
+export const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_API_KEY!,
+});

@@ -1,6 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
-import {google} from "@/app/api/chatbot/route";
+import {google} from "@/lib/utils";
 import { generateText } from 'ai';
 import { AIResponse } from '@/lib/types';
 

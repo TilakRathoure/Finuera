@@ -1,4 +1,4 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { google } from "@/lib/utils";
 import {convertToModelMessages, streamText } from "ai";
 
 const initialMessage = `
@@ -54,12 +54,6 @@ ROI = 50%
 
 Your mission is to make finance **understandable, interactive, concise, and personalized** for all users while leveraging Finuera’s advanced AI and analytics.
 `;
-
-
-
-export const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_API_KEY!,
-});
 
 export const runtime="edge";
 
