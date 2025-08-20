@@ -1,7 +1,7 @@
 'use client'
 import { Lightbulb, TrendingUp, DollarSign, Calendar } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Line, XAxis, LineChart, Pie, PieChart, Cell } from "recharts";
-import { useContext, useState } from "react";
+import { Bar, BarChart, CartesianGrid, Line, XAxis, LineChart, Pie, PieChart, Cell, ResponsiveContainer } from "recharts";
+import { useContext } from "react";
 import { DarkModeContext } from "@/lib/darkmode";
 import { redirect } from "next/navigation";
 
@@ -31,10 +31,9 @@ const mockDashboardData = {
 };
 
 const Dashboard = () => {
+  const { dashboard } = useContext(DarkModeContext);
 
-  const {dashboard}=useContext(DarkModeContext);
-
-  if(!dashboard) return redirect("/upload");
+  if (!dashboard) return redirect("/upload");
 
   // Transform monthly spending data for charts
   const monthlyChartData = dashboard.monthlySpending.map(item => ({
@@ -114,27 +113,17 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Monthly Spending</h3>
               <p className="text-gray-600 dark:text-gray-400">Your spending by month</p>
             </div>
-            <div className="p-6">
-              <div className="h-64">
+            <div className="p-6 w-full h-64">
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  width={400}
-                  height={250}
                   data={monthlyChartData}
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
-                  <XAxis 
-                    dataKey="month" 
-                    stroke="#6b7280"
-                    fontSize={12}
-                  />
-                  <Bar 
-                    dataKey="amount" 
-                    fill="#3b82f6" 
-                    radius={[4, 4, 0, 0]}
-                  />
+                  <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                  <Bar dataKey="amount" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </div>
+              </ResponsiveContainer>
             </div>
             <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <TrendingUp className="h-4 w-4" />
@@ -148,23 +137,24 @@ const Dashboard = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending by Category</h3>
               <p className="text-gray-600 dark:text-gray-400">Breakdown of your expenses</p>
             </div>
-            <div className="p-6">
-              <div className="h-64 flex items-center justify-center">
-                <PieChart width={300} height={250}>
+            <div className="p-6 h-64 flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
                   <Pie
                     data={categoryChartData}
-                    cx={150}
-                    cy={125}
+                    cx="50%"
+                    cy="50%"
                     outerRadius={80}
                     dataKey="amount"
-                    label={({ category, amount }) => `${category}: ${amount}`}
+                    labelLine={false}
+                    label={({ category }) => category}
                   >
                     {categoryChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Pie>
                 </PieChart>
-              </div>
+              </ResponsiveContainer>
             </div>
             <div className="px-6 pb-6">
               <div className="flex flex-wrap gap-4">
@@ -190,29 +180,23 @@ const Dashboard = () => {
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending Trend</h3>
             <p className="text-gray-600 dark:text-gray-400">Track your spending pattern over time</p>
           </div>
-          <div className="p-6">
-            <div className="h-64">
+          <div className="p-6 h-64">
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                width={800}
-                height={250}
                 data={monthlyChartData}
                 margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#6b7280"
-                  fontSize={12}
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="amount" 
-                  stroke="#10b981" 
+                <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                <Line
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#10b981"
                   strokeWidth={3}
                   dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
                 />
               </LineChart>
-            </div>
+            </ResponsiveContainer>
           </div>
           <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <TrendingUp className="h-4 w-4" />

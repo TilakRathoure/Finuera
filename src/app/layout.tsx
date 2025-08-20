@@ -10,11 +10,12 @@ const comfortaa = Comfortaa({
   subsets: ["latin"],
   weight: "variable",
   variable: "--font-comfortaa",
+  display: "swap", 
 });
 
 export const metadata: Metadata = {
   title: "Finuera",
-  description: "You Finance ",
+  description: "Your Finance",
 };
 
 export default function RootLayout({
@@ -24,10 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={` ${comfortaa.className}`}>
+      <body
+        className={`${comfortaa.className} font-sans`}
+        style={{ fontFamily: `"Comfortaa", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif` }}
+      >
         <DarkModeProvider>
           <Header />
-          <VedAI/>
+          <VedAI />
           {children}
         </DarkModeProvider>
         <Toaster position="bottom-center" offset="50px" />

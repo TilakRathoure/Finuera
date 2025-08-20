@@ -72,32 +72,38 @@ const UploadPage = () => {
     }
   };
 
-  const handleDrop =(e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
+const handleDrop = (e: React.DragEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+  setDragActive(false);
 
-    handleFileInput();
+  const file = e.dataTransfer.files?.[0];
+  if (!file) return;
 
-  };
+  validateAndSetFile(file);
+};
 
-  const handleFileInput =
-    (e?: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e?.target.files?.[0];
+const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-      if (!file) return;
+  validateAndSetFile(file);
+};
 
-      const validFile =
-        file.type == "text/csv" ||
-        file.type == "application/pdf" ||
-file.type.startsWith("image/")
+const validateAndSetFile = (file: File) => {
+  const validFile =
+    file.type === "text/csv" ||
+    file.type === "application/pdf" ||
+    file.type.startsWith("image/");
 
-      if (validFile) setFile(file);
-      else{
-        toast.error("only csv, pdf and images allowed");
-        console.log(file.type);
-      }
-    }
+  if (validFile) {
+    setFile(file);
+  } else {
+    toast.error("Only CSV, PDF, and images allowed");
+    console.log("Invalid file type:", file.type);
+  }
+};
+
 
   const removeFile = () => {
     setFile(null);
@@ -123,6 +129,8 @@ file.type.startsWith("image/")
 
   const handleUpload = async () => {
 
+    if(uploadComplete) return;
+
     if(!file) return toast.error("No file added");
     setUploading(true);
 
@@ -142,7 +150,7 @@ file.type.startsWith("image/")
     }catch(error){
       const err=error as AxiosError;
       const message=err.response?.data as ErrResponse;
-      toast.error(message.error);
+      toast.error(message.message);
     }
     
     finally{
