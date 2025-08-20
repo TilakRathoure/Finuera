@@ -60,6 +60,7 @@ export interface FooterLink {
 };
 
 export interface ErrResponse{
+  error:string,
   message:string;
 }
 
@@ -68,13 +69,15 @@ interface charinfo{
   color:string,
 }
 
+export interface chartconfig{housing?:charinfo, transportation?:charinfo, groceries?:charinfo, utilities?:charinfo, entertainment?:charinfo, food?:charinfo, shopping?:charinfo, healthcare?:charinfo, education?:charinfo, personal?:charinfo, travel?:charinfo, insurance?:charinfo, gifts?:charinfo, bills?:charinfo, "other-expense"?:charinfo}
+
 export interface Dashboard{
   error: boolean,
   totalAmount:number,
   monthlySpending:{month:string, spent:number}[],
-  categories:{categories:string, amount:number}[],
+  categories:{category:string, amount:number}[],
   tip:string,
-  chartconfig:{housing?:charinfo, transportation?:charinfo, groceries?:charinfo, utilities?:charinfo, entertainment?:charinfo, food?:charinfo, shopping?:charinfo, healthcare?:charinfo, education?:charinfo, personal?:charinfo, travel?:charinfo, insurance?:charinfo, gifts?:charinfo, bills?:charinfo, "other-expense"?:charinfo}
+  chartconfig:chartconfig,
 }
 
 export interface AIResponse {

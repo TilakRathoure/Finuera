@@ -4,7 +4,7 @@ import {google} from "@/lib/utils";
 import { generateText } from 'ai';
 import { AIResponse } from '@/lib/types';
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 1 * 1024 * 1024;
 const SUPPORTED_TYPES = [
   'text/csv',
   'application/pdf',
@@ -73,7 +73,7 @@ Do not include any explanation, only return the JSON.
 
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: 'File size too large. Maximum size is 10MB.' },
+        { error: 'File size too large. Maximum size is 1MB.' },
         { status: 400 }
       );
     }
@@ -132,6 +132,7 @@ Do not include any explanation, only return the JSON.
 
       if(newres.error){
         return NextResponse.json({
+          error:"Failed to upload file",
           message:"No Financial data found",
         },{status:500})
       }

@@ -24,12 +24,11 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Dashboard, ErrResponse, Homeinfo } from "@/lib/types";
+import { ErrResponse, Homeinfo } from "@/lib/types";
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { DarkModeContext } from "@/lib/darkmode";
-import { redirect } from "next/navigation";
 
 const Homeabout: Homeinfo[] = [
   {
@@ -143,7 +142,7 @@ file.type.startsWith("image/")
     }catch(error){
       const err=error as AxiosError;
       const message=err.response?.data as ErrResponse;
-      toast.error(message.message);
+      toast.error(message.error);
     }
     
     finally{

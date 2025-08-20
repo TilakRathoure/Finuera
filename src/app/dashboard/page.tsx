@@ -1,220 +1,225 @@
-"use client";
-
-import { Lightbulb, TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Line, XAxis, LineChart, Pie, PieChart } from "recharts";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { useContext } from "react";
+'use client'
+import { Lightbulb, TrendingUp, DollarSign, Calendar } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, Line, XAxis, LineChart, Pie, PieChart, Cell } from "recharts";
+import { useContext, useState } from "react";
 import { DarkModeContext } from "@/lib/darkmode";
+import { redirect } from "next/navigation";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
-
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "#60a5fa",
-  },
-} satisfies ChartConfig;
-
-
+// Mock dashboard data (replace with your actual context data)
+const mockDashboardData = {
+  "error": false,
+  "totalAmount": 154.06,
+  "monthlySpending": [
+    {
+      "month": "February",
+      "spent": 154.06
+    }
+  ],
+  "categories": [
+    {
+      "category": "transportation",
+      "amount": 154.06
+    }
+  ],
+  "tip": "Your February spending was dominated by transportation costs at $154.06, suggesting a significant expense related to vehicle repair. Consider reviewing your vehicle maintenance schedule and exploring options for preventative maintenance to reduce future high-cost repairs. Also, shop around for future repairs to ensure you're receiving competitive pricing.",
+  "chartconfig": {
+    "transportation": {
+      "label": "Transportation",
+      "color": "#90ee90"
+    }
+  }
+};
 
 const Dashboard = () => {
 
-  const chartData1 = [
-  { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-  { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-]
+  const {dashboard}=useContext(DarkModeContext);
 
-  const chartConfig1 = {
-  visitors: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "#1e3a8a",
-  },
-  safari: {
-    label: "Safari",
-    color: "#3b82f6", 
-  },
-  firefox: {
-    label: "Firefox",
-    color: "#60a5fa",
-  },
-  edge: {
-    label: "Edge",
-    color: "#93c5fd", 
-  },
-  other: {
-    label: "Other",
-    color: "#bfdbfe",
-  },
-} satisfies ChartConfig;
+  if(!dashboard) return redirect("/upload");
 
-  const {dashboard}= useContext(DarkModeContext);
+  // Transform monthly spending data for charts
+  const monthlyChartData = dashboard.monthlySpending.map(item => ({
+    month: item.month,
+    amount: item.spent
+  }));
 
-  console.log(dashboard);
+  // Transform categories data for pie chart
+  const categoryChartData = dashboard.categories.map(item => ({
+    category: item.category,
+    amount: item.amount,
+    fill: "#8884d8"
+  }));
 
   return (
-    <div className="pt-20 flex flex-col gap-5">
-
-        <div className="flex flex-col gap-2 md:flex-row">
-
-      <Card className=" md:w-1/2">
-        <CardHeader>
-          <CardTitle>Bar Chart</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={chartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={true}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Bar dataKey="desktop" radius={8} fill="#60a5fa" />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 leading-none font-medium">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-          </div>
-          <div className="text-muted-foreground leading-none">
-            Showing total visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
-
-
-        <Card className="md:w-1/2 bg-yellow-100 pt-4">
-            <CardHeader><CardTitle><Lightbulb /></CardTitle></CardHeader>
-            <CardContent>
-              {dashboard?.tip}
-            </CardContent>
-
-        </Card>
-
-
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Expense Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400">Track your spending patterns and get insights</p>
         </div>
 
-
-
-
-        <div className="flex flex-col gap-5 md:gap-0 md:flex-row">
-
-      <Card className="md:w-1/2">
-        <CardHeader>
-          <CardTitle>Line Chart</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer config={chartConfig}>
-            <LineChart
-              accessibilityLayer
-              data={chartData}
-              margin={{
-                left: 12,
-                right: 12,
-              }}
-            >
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
-              />
-              <Line
-                dataKey="desktop"
-                type="natural"
-                stroke="var(--color-desktop)"
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 leading-none font-medium">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {/* Total Amount Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Spending</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  ${dashboard.totalAmount.toFixed(2)}
+                </p>
+              </div>
+              <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-full transition-colors">
+                <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+            </div>
           </div>
-          <div className="text-muted-foreground leading-none">
-            Showing total visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
 
-      {/* PIECHART */}
-
-            <Card className="md:w-1/2 flex flex-col ">
-        <CardHeader className="items-center pb-0">
-          <CardTitle>Pie Chart - Label</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 pb-0">
-          <ChartContainer
-            config={chartConfig1}
-            className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0"
-          >
-            <PieChart>
-              <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-              <Pie
-                data={chartData1}
-                dataKey="visitors"
-                label
-                nameKey="browser"
-              />
-            </PieChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col gap-2 text-sm">
-          <div className="flex items-center gap-2 leading-none font-medium">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          {/* Categories Count */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Categories</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  {dashboard.categories.length}
+                </p>
+              </div>
+              <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-full transition-colors">
+                <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+            </div>
           </div>
-          <div className="text-muted-foreground leading-none">
-            Showing total visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card>
 
+          {/* Tip Card */}
+          <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
+            <div className="flex items-start gap-3">
+              <div className="bg-yellow-100 dark:bg-yellow-900/20 p-2 rounded-full transition-colors">
+                <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Smart Tip</h3>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">
+                  {dashboard.tip}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Charts Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Monthly Spending Bar Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Monthly Spending</h3>
+              <p className="text-gray-600 dark:text-gray-400">Your spending by month</p>
+            </div>
+            <div className="p-6">
+              <div className="h-64">
+                <BarChart
+                  width={400}
+                  height={250}
+                  data={monthlyChartData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                  <XAxis 
+                    dataKey="month" 
+                    stroke="#6b7280"
+                    fontSize={12}
+                  />
+                  <Bar 
+                    dataKey="amount" 
+                    fill="#3b82f6" 
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </div>
+            </div>
+            <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <TrendingUp className="h-4 w-4" />
+              Showing spending for tracked months
+            </div>
+          </div>
+
+          {/* Category Pie Chart */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending by Category</h3>
+              <p className="text-gray-600 dark:text-gray-400">Breakdown of your expenses</p>
+            </div>
+            <div className="p-6">
+              <div className="h-64 flex items-center justify-center">
+                <PieChart width={300} height={250}>
+                  <Pie
+                    data={categoryChartData}
+                    cx={150}
+                    cy={125}
+                    outerRadius={80}
+                    dataKey="amount"
+                    label={({ category, amount }) => `${category}: ${amount}`}
+                  >
+                    {categoryChartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </div>
+            </div>
+            <div className="px-6 pb-6">
+              <div className="flex flex-wrap gap-4">
+                {dashboard.categories.map((cat, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div 
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: "#8884d8" }}
+                    ></div>
+                    <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                      {cat.category}: ${cat.amount.toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Monthly Trend Line Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending Trend</h3>
+            <p className="text-gray-600 dark:text-gray-400">Track your spending pattern over time</p>
+          </div>
+          <div className="p-6">
+            <div className="h-64">
+              <LineChart
+                width={800}
+                height={250}
+                data={monthlyChartData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
+                <XAxis 
+                  dataKey="month" 
+                  stroke="#6b7280"
+                  fontSize={12}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="amount" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+                />
+              </LineChart>
+            </div>
+          </div>
+          <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <TrendingUp className="h-4 w-4" />
+            Monitor your spending trends to identify patterns
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
