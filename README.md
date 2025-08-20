@@ -1,7 +1,7 @@
 # Finuera
 
 
-<img src="https://github.com/user-attachments/assets/91f6a589-9a22-42d8-a9c9-465a5804cf51" width="100%" />
+<img src="https://github.com/user-attachments/assets/c312ec12-d468-44b1-a2ef-6f0e36c59ed3" width="100%" />
 
 
 <p align="center">
