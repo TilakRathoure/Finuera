@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import DarkModeProvider from "@/lib/darkmode";
 import Header from "@/components/home/Header";
 import VedAI from "@/components/chatbot/VedAI";
+import { Analytics } from "@vercel/analytics/next"
 
 const comfortaa = Comfortaa({
   subsets: ["latin"],
@@ -35,6 +36,7 @@ export default function RootLayout({
           {children}
         </DarkModeProvider>
         <Toaster position="bottom-center" offset="50px" />
+        <Analytics />
       </body>
     </html>
   );
