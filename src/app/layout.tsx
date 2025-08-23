@@ -16,7 +16,7 @@ const comfortaa = Comfortaa({
 
 export const metadata: Metadata = {
   title: "Finuera",
-  description: "Your Finance",
+  description: "Your Finance Assistant",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" data-scroll-behavior="smooth" className="scroll-smooth">
       <body
         className={`${comfortaa.className} font-sans`}
         style={{ fontFamily: `"Comfortaa", "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif` }}

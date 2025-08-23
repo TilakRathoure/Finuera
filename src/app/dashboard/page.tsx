@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { DarkModeContext } from "@/lib/darkmode";
 import { redirect } from "next/navigation";
 
-// Mock dashboard data (replace with your actual context data)
 const mockDashboardData = {
   "error": false,
   "totalAmount": 154.06,
@@ -35,13 +34,11 @@ const Dashboard = () => {
 
   if (!dashboard) return redirect("/upload");
 
-  // Transform monthly spending data for charts
   const monthlyChartData = dashboard.monthlySpending.map(item => ({
     month: item.month,
     amount: item.spent
   }));
 
-  // Transform categories data for pie chart
   const categoryChartData = dashboard.categories.map(item => ({
     category: item.category,
     amount: item.amount,
@@ -49,7 +46,7 @@ const Dashboard = () => {
   }));
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[150px]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
