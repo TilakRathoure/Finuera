@@ -73,6 +73,7 @@ export interface chartconfig{housing?:charinfo, transportation?:charinfo, grocer
 
 export interface Dashboard{
   error: boolean,
+  currencysymbol:string,
   totalAmount:number,
   monthlySpending:{month:string, spent:number}[],
   categories:{category:string, amount:number}[],

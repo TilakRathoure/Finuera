@@ -30,6 +30,7 @@ Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the
 Return:
 {
 "error":false,
+"currencysymbol":"string",
   "totalAmount": number,
   "monthlySpending": [
     {"month": "January", "spent": number},

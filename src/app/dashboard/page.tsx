@@ -1,33 +1,25 @@
 'use client'
 import { Lightbulb, TrendingUp, DollarSign, Calendar } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, Line, XAxis, LineChart, Pie, PieChart, Cell, ResponsiveContainer } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart, Line, LineChart } from "recharts";
 import { useContext } from "react";
 import { DarkModeContext } from "@/lib/darkmode";
 import { redirect } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
-const mockDashboardData = {
-  "error": false,
-  "totalAmount": 154.06,
-  "monthlySpending": [
-    {
-      "month": "February",
-      "spent": 154.06
-    }
-  ],
-  "categories": [
-    {
-      "category": "transportation",
-      "amount": 154.06
-    }
-  ],
-  "tip": "Your February spending was dominated by transportation costs at $154.06, suggesting a significant expense related to vehicle repair. Consider reviewing your vehicle maintenance schedule and exploring options for preventative maintenance to reduce future high-cost repairs. Also, shop around for future repairs to ensure you're receiving competitive pricing.",
-  "chartconfig": {
-    "transportation": {
-      "label": "Transportation",
-      "color": "#90ee90"
-    }
-  }
-};
+// Color palette for pie chart
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#E91E63', '#9C27B0', '#4CAF50', '#FF5722', '#607D8B'];
 
 const Dashboard = () => {
   const { dashboard } = useContext(DarkModeContext);
@@ -39,11 +31,31 @@ const Dashboard = () => {
     amount: item.spent
   }));
 
-  const categoryChartData = dashboard.categories.map(item => ({
+  const categoryChartData = dashboard.categories.map((item, index) => ({
     category: item.category,
     amount: item.amount,
-    fill: "#8884d8"
+    fill: COLORS[index % COLORS.length]
   }));
+
+  // Chart configs
+  const monthlyChartConfig = {
+    amount: {
+      label: "Amount",
+      color: "#0088FE",
+    },
+  };
+
+  const categoryChartConfig = dashboard.categories.reduce((config, cat, index) => {
+    config[cat.category] = {
+      label: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
+      color: COLORS[index % COLORS.length],
+    };
+    return config;
+  }, {
+    amount: {
+      label: "Amount",
+    },
+  } as Record<string, { label: string; color?: string }>);
 
   return (
     <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[150px]">
@@ -62,7 +74,7 @@ const Dashboard = () => {
               <div>
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Spending</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  ${dashboard.totalAmount.toFixed(2)}
+                  {dashboard.currencysymbol}{dashboard.totalAmount.toFixed(2)}
                 </p>
               </div>
               <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-full transition-colors">
@@ -105,101 +117,125 @@ const Dashboard = () => {
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Monthly Spending Bar Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Monthly Spending</h3>
-              <p className="text-gray-600 dark:text-gray-400">Your spending by month</p>
-            </div>
-            <div className="p-6 w-full h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={monthlyChartData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
-                  <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
-                  <Bar dataKey="amount" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+          <Card>
+            <CardHeader>
+              <CardTitle>Monthly Spending</CardTitle>
+              <CardDescription>Your spending by month</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={monthlyChartConfig}>
+                <BarChart accessibilityLayer data={monthlyChartData}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Bar dataKey="amount" fill="var(--color-amount)" radius={8} />
                 </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-              <TrendingUp className="h-4 w-4" />
-              Showing spending for tracked months
-            </div>
-          </div>
+              </ChartContainer>
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+              <div className="flex gap-2 leading-none font-medium">
+                <TrendingUp className="h-4 w-4" />
+                Showing spending for tracked months
+              </div>
+            </CardFooter>
+          </Card>
 
           {/* Category Pie Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending by Category</h3>
-              <p className="text-gray-600 dark:text-gray-400">Breakdown of your expenses</p>
-            </div>
-            <div className="p-6 h-64 flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
+          <Card className="flex flex-col">
+            <CardHeader className="items-center pb-0">
+              <CardTitle>Spending by Category</CardTitle>
+              <CardDescription>Breakdown of your expenses</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-0">
+              <ChartContainer
+                config={categoryChartConfig}
+                className="mx-auto aspect-square max-h-[250px]"
+              >
                 <PieChart>
-                  <Pie
-                    data={categoryChartData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    dataKey="amount"
-                    labelLine={false}
-                    label={({ category }) => category}
-                  >
-                    {categoryChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Pie data={categoryChartData} dataKey="amount" nameKey="category" />
                 </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="px-6 pb-6">
-              <div className="flex flex-wrap gap-4">
+              </ChartContainer>
+            </CardContent>
+            <CardFooter className="flex-col gap-2 text-sm">
+              <div className="flex items-center gap-2 leading-none font-medium">
+                <TrendingUp className="h-4 w-4" />
+                Monitor your spending trends to identify patterns
+              </div>
+              <div className="flex flex-wrap gap-4 mt-2">
                 {dashboard.categories.map((cat, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <div 
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: "#8884d8" }}
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     ></div>
-                    <span className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                      {cat.category}: ${cat.amount.toFixed(2)}
+                    <span className="text-sm text-muted-foreground capitalize">
+                      {cat.category}: {dashboard.currencysymbol}{cat.amount.toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardFooter>
+          </Card>
         </div>
 
         {/* Monthly Trend Line Chart */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 transition-colors">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Spending Trend</h3>
-            <p className="text-gray-600 dark:text-gray-400">Track your spending pattern over time</p>
-          </div>
-          <div className="p-6 h-64">
-            <ResponsiveContainer width="100%" height="100%">
+        <Card className="max-h-[80vh]">
+          <CardHeader>
+            <CardTitle>Spending Trend</CardTitle>
+            <CardDescription>Track your spending pattern over time</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={monthlyChartConfig}>
               <LineChart
+                accessibilityLayer
                 data={monthlyChartData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                margin={{
+                  left: 12,
+                  right: 12,
+                }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
-                <XAxis dataKey="month" stroke="#6b7280" fontSize={12} />
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
                 <Line
-                  type="monotone"
                   dataKey="amount"
-                  stroke="#10b981"
-                  strokeWidth={3}
-                  dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+                  type="linear"
+                  stroke="var(--color-amount)"
+                  strokeWidth={2}
+                  dot={false}
                 />
               </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="px-6 pb-6 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <TrendingUp className="h-4 w-4" />
-            Monitor your spending trends to identify patterns
-          </div>
-        </div>
+            </ChartContainer>
+          </CardContent>
+          <CardFooter className="flex-col items-start gap-2 text-sm">
+            <div className="flex gap-2 leading-none font-medium">
+              <TrendingUp className="h-4 w-4" />
+              Monitor your spending trends to identify patterns
+            </div>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );

@@ -53,6 +53,9 @@ ROI = 50%
 > Consider adjusting discretionary spending to improve savings.
 
 Your mission is to make finance **understandable, interactive, concise, and personalized** for all users while leveraging Finuera’s advanced AI and analytics.
+
+I
+
 `;
 
 export const runtime="edge";

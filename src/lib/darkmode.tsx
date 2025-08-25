@@ -19,7 +19,7 @@ export const DarkModeContext = createContext<{
 });
 
 const DarkModeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [dark, setdark] = useState(false);
+  const [dark, setdark] = useState<boolean>(false);
   const [chat,setChat]=useState<boolean>(false);
   const [dashboard,setdashboard]=useState<Dashboard|null> (null);
 
