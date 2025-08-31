@@ -1,6 +1,15 @@
-'use client'
+"use client";
 import { Lightbulb, TrendingUp, DollarSign, Calendar } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart, Line, LineChart } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  Pie,
+  PieChart,
+  Line,
+  LineChart,
+} from "recharts";
 import { useContext } from "react";
 import { DarkModeContext } from "@/lib/darkmode";
 import { redirect } from "next/navigation";
@@ -11,30 +20,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 // Color palette for pie chart
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#E91E63', '#9C27B0', '#4CAF50', '#FF5722', '#607D8B'];
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884D8",
+  "#E91E63",
+  "#9C27B0",
+  "#4CAF50",
+  "#FF5722",
+  "#607D8B",
+];
 
 const Dashboard = () => {
   const { dashboard } = useContext(DarkModeContext);
 
   if (!dashboard) return redirect("/upload");
 
-  const monthlyChartData = dashboard.monthlySpending.map(item => ({
+  const monthlyChartData = dashboard.monthlySpending.map((item) => ({
     month: item.month,
-    amount: item.spent
+    amount: item.spent,
   }));
 
   const categoryChartData = dashboard.categories.map((item, index) => ({
     category: item.category,
     amount: item.amount,
-    fill: COLORS[index % COLORS.length]
+    fill: COLORS[index % COLORS.length],
   }));
 
   // Chart configs
@@ -45,36 +65,46 @@ const Dashboard = () => {
     },
   };
 
-  const categoryChartConfig = dashboard.categories.reduce((config, cat, index) => {
-    config[cat.category] = {
-      label: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
-      color: COLORS[index % COLORS.length],
-    };
-    return config;
-  }, {
-    amount: {
-      label: "Amount",
+  const categoryChartConfig = dashboard.categories.reduce(
+    (config, cat, index) => {
+      config[cat.category] = {
+        label: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
+        color: COLORS[index % COLORS.length],
+      };
+      return config;
     },
-  } as Record<string, { label: string; color?: string }>);
+    {
+      amount: {
+        label: "Amount",
+      },
+    } as Record<string, { label: string; color?: string }>
+  );
 
   return (
     <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[150px]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Expense Dashboard</h1>
-          <p className="text-gray-600 dark:text-gray-400">Track your spending patterns and get insights</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Expense Dashboard
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Track your spending patterns and get insights
+          </p>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Total Amount Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Spending</p>
+              <div className="lg:flex lg:flex-col lg:gap-3">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Total Spending
+                </p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  {dashboard.currencysymbol}{dashboard.totalAmount.toFixed(2)}
+                  {dashboard.currencysymbol}
+                  {dashboard.totalAmount.toFixed(2)}
                 </p>
               </div>
               <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-full transition-colors">
@@ -84,10 +114,12 @@ const Dashboard = () => {
           </div>
 
           {/* Categories Count */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Categories</p>
+              <div className="lg:flex lg:flex-col lg:gap-3">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  Categories
+                </p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   {dashboard.categories.length}
                 </p>
@@ -105,9 +137,12 @@ const Dashboard = () => {
                 <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">Smart Tip</h3>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">
-                  {dashboard.tip}
+                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                  Smart Tip
+                </h3>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed flex flex-col gap-2">
+                  <p>{dashboard.tip.part1}</p>
+                  <p>{dashboard.tip.part2}</p>
                 </p>
               </div>
             </div>
@@ -165,7 +200,11 @@ const Dashboard = () => {
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
-                  <Pie data={categoryChartData} dataKey="amount" nameKey="category" />
+                  <Pie
+                    data={categoryChartData}
+                    dataKey="amount"
+                    nameKey="category"
+                  />
                 </PieChart>
               </ChartContainer>
             </CardContent>
@@ -177,12 +216,13 @@ const Dashboard = () => {
               <div className="flex flex-wrap gap-4 mt-2">
                 {dashboard.categories.map((cat, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <div 
+                    <div
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}
                     ></div>
                     <span className="text-sm text-muted-foreground capitalize">
-                      {cat.category}: {dashboard.currencysymbol}{cat.amount.toFixed(2)}
+                      {cat.category}: {dashboard.currencysymbol}
+                      {cat.amount.toFixed(2)}
                     </span>
                   </div>
                 ))}
@@ -192,13 +232,18 @@ const Dashboard = () => {
         </div>
 
         {/* Monthly Trend Line Chart */}
-        <Card className="max-h-[80vh]">
+        <Card className="max-h-[90vh]">
           <CardHeader>
             <CardTitle>Spending Trend</CardTitle>
-            <CardDescription>Track your spending pattern over time</CardDescription>
+            <CardDescription>
+              Track your spending pattern over time
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <ChartContainer config={monthlyChartConfig}>
+          <CardContent className="flex justify-center">
+            <ChartContainer
+              config={monthlyChartConfig}
+              className="max-h-[60vh] flex-1"
+            >
               <LineChart
                 accessibilityLayer
                 data={monthlyChartData}

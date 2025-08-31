@@ -24,7 +24,8 @@ Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the
 1. Calculate the total amount spent across all transactions
 2. Group spending by month and calculate monthly totals
 3. Categorize each transaction into one of these categories: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense
-4. Give a tip on based on the spending in about 100 words;
+4.1  Analyze the spending data and generate 3–5 concise, actionable insights. Each insight should be specific, data-driven, and no longer than 2 sentences. Highlight anomalies, comparisons with past months, or budget overruns. Provide clear suggestions where applicable (e.g., reduce X, adjust Y, or allocate more to Z). This part should be in one sentence;
+4.2  Give a tip based on the spending in about 100 words.
 5. And chart config for categarires and their spending with a random colour;
 
 Return:
@@ -40,7 +41,10 @@ Return:
     {"category": "groceries", "amount": number},
     {"category": "transportation", "amount": number}
   ],
-  "tip": "string",
+  "tip": {
+  part1:"string",
+  part2:"string"
+  }
 
   "chartconfig:{
 

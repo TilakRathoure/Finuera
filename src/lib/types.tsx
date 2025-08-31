@@ -77,7 +77,10 @@ export interface Dashboard{
   totalAmount:number,
   monthlySpending:{month:string, spent:number}[],
   categories:{category:string, amount:number}[],
-  tip:string,
+  tip:{
+    part1:string,
+    part2:string
+  },
   chartconfig:chartconfig,
 }
 
