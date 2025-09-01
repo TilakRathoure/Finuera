@@ -26,18 +26,17 @@ const signup = async (name: string, email: string, password: string) => {
   }
 };
 
-  const login = async (email:string,password:string) => {
+const login = async (email: string, password: string) => {
+  try {
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+  } catch (error) {
+    const err = error as Error;
+    return err.message;
+  }
+};
 
-    try {
-      await signIn("credentials", {
-        email,
-        password,
-        redirect:false
-      });
-    } catch (error) {
-      const err = error as Error; 
-      return err.message;
-    }
-  };
-
-export { signup,login };
+export { signup, login };

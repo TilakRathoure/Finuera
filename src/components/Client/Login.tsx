@@ -1,18 +1,24 @@
-'use client'
+"use client";
 
 import { login } from "@/actions/server";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter } from "../ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+  CardContent,
+  CardFooter,
+} from "../ui/card";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import Link from "next/link";
 
-
-const Page=()=>{
-
-return (
+const Page = () => {
+  return (
     <div className="bg-black h-screen flex justify-center items-center">
       <Card className="w-full max-w-sm ">
         <CardHeader>
@@ -44,7 +50,6 @@ return (
             }
 
             toast.success("successs");
-
             redirect("/");
           }}
         >
@@ -74,6 +79,6 @@ return (
       </Card>
     </div>
   );
-}
+};
 
-export default Page
+export default Page;
