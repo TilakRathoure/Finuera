@@ -66,7 +66,7 @@ const Home = () => {
               exit={{ opacity: 0, scale: 0.8 }}
               className=""
             >
-              <Card className="w-[60vw] max-w-[500px]">
+              <Card className="w-[60vw] max-w-[500px] min-w-[300px]">
                 <CardHeader className="flex justify-between">
                   <CardTitle className="text-lg font-bold">VEDAI.</CardTitle>
                   <Button
