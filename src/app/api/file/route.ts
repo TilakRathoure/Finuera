@@ -12,13 +12,7 @@ const SUPPORTED_TYPES = [
   "image/webp",
   "image/gif",
 ];
-
-export const POST = async (request: NextRequest) => {
-  try {
-    const formData = await request.formData();
-    const file = formData.get("file") as File;
-
-    const instructions = `
+const instructions = `
 Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the following information in JSON format:
 
 1. Calculate the total amount spent across all transactions
@@ -66,6 +60,12 @@ Only if it truly has no financial content (like poems, random text, or images wi
 
 Do not include any explanation, only return the JSON.
 `;
+
+export const POST = async (request: NextRequest) => {
+  try {
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+
     if (!file) {
       return NextResponse.json({ error: "No file provided",message:"No file provided" }, { status: 400 });
     }
@@ -100,7 +100,7 @@ Do not include any explanation, only return the JSON.
         const limitedCsv = lines.slice(0, 501).join("\n");
 
         const result = await generateText({
-          model: google("gemini-1.5-flash"),
+          model: google("gemini-2.5-flash"),
           messages: [
             {
               role: "user",
@@ -114,7 +114,7 @@ Do not include any explanation, only return the JSON.
         const uint8Array = new Uint8Array(arrayBuffer);
 
         const result = await generateText({
-          model: google("gemini-1.5-flash"),
+          model: google("gemini-2.5-flash"),
           messages: [
             {
               role: "user",
