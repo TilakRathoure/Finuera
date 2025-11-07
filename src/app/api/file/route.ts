@@ -109,17 +109,38 @@ export const POST = async (request: NextRequest) => {
       if (file.type === "text/csv") {
         const csvText = new TextDecoder().decode(arrayBuffer);
         const lines = csvText.split(/\r?\n/);
-        const limitedCsv = lines.slice(0, 501).join("\n");
+        const limitedCsv = lines.slice(0, 201).join("\n");
 
-        const result = await generateText({
-          model: google("gemini-2.5-flash"),
-          messages: [
+        let result = null;
+        for (const model of GEMINI_MODELS) {
+          try {
+            const res = await generateText({
+              model: google(model),
+              messages: [
+                {
+                  role: "user",
+                  content: `Here is a CSV file content. Please follow these instructions: ${instructions}\n\nCSV Content:\n${limitedCsv}`,
+                },
+              ],
+            });
+            result = res;
+            console.log(`CSV processed with model ${model}`);
+            break;
+          } catch (error) {
+            console.log(`${model} failed for CSV`);
+            continue;
+          }
+        }
+
+        if (!result) {
+          return NextResponse.json(
             {
-              role: "user",
-              content: `Here is a CSV file content. Please follow these instructions: ${instructions}\n\nCSV Content:\n${limitedCsv}`,
+              error: "All models failed",
+              message: "Unable to process CSV with available Gemini models",
             },
-          ],
-        });
+            { status: 500 }
+          );
+        }
 
         response = result.text;
       } else {
@@ -155,11 +176,11 @@ export const POST = async (request: NextRequest) => {
                 },
               ],
             });
-
             result = res;
-            console.log(`Result with model ${model}`)
+            console.log(`Processed with model ${model}`);
             break;
           } catch (error) {
+            console.log(`${model} failed`);
             continue;
           }
         }
