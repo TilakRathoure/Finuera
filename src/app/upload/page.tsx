@@ -60,9 +60,9 @@ const UploadPage = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
 
-  const {setdashboard}=useContext(DarkModeContext);
+  const { setdashboard } = useContext(DarkModeContext);
 
-  const handleDrag =(e: React.DragEvent) => {
+  const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -72,38 +72,37 @@ const UploadPage = () => {
     }
   };
 
-const handleDrop = (e: React.DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-  setDragActive(false);
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
 
-  const file = e.dataTransfer.files?.[0];
-  if (!file) return;
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
 
-  validateAndSetFile(file);
-};
+    validateAndSetFile(file);
+  };
 
-const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  validateAndSetFile(file);
-};
+    validateAndSetFile(file);
+  };
 
-const validateAndSetFile = (file: File) => {
-  const validFile =
-    file.type === "text/csv" ||
-    file.type === "application/pdf" ||
-    file.type.startsWith("image/");
+  const validateAndSetFile = (file: File) => {
+    const validFile =
+      file.type === "text/csv" ||
+      file.type === "application/pdf" ||
+      file.type.startsWith("image/");
 
-  if (validFile) {
-    setFile(file);
-  } else {
-    toast.error("Only CSV, PDF, and images allowed");
-    console.log("Invalid file type:", file.type);
-  }
-};
-
+    if (validFile) {
+      setFile(file);
+    } else {
+      toast.error("Only CSV, PDF, and images allowed");
+      console.log("Invalid file type:", file.type);
+    }
+  };
 
   const removeFile = () => {
     setFile(null);
@@ -128,45 +127,35 @@ const validateAndSetFile = (file: File) => {
   };
 
   const handleUpload = async () => {
+    if (uploadComplete) return;
 
-    if(uploadComplete) return;
-
-    if(!file) return toast.error("No file added");
+    if (!file) return toast.error("No file added");
     setUploading(true);
 
-    try{
+    try {
+      const formdata = new FormData();
+      formdata.set("file", file);
 
-      const formdata=new FormData();
-      formdata.set("file",file);
-      
-      const {data} =await axios.post("api/file",formdata);
+      const { data } = await axios.post("api/file", formdata);
 
       console.log(data.data);
       setdashboard(data.data);
 
       setUploadComplete(true);
-
-
-    }catch(error){
-      const err=error as AxiosError;
-      const message=err.response?.data as ErrResponse;
+    } catch (error) {
+      const err = error as AxiosError;
+      const message = err.response?.data as ErrResponse;
       toast.error(message.message);
-    }
-    
-    finally{
+    } finally {
       setUploading(false);
     }
-
-
   };
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (!file) return;
 
-    if(!file) return;
-
-    window.scrollTo(0,200)
-
-  },[file])
+    window.scrollTo(0, 200);
+  }, [file]);
 
   return (
     <div className="min-h-screen bg-background pt-[80px]">
@@ -181,7 +170,6 @@ const validateAndSetFile = (file: File) => {
           </p>
         </div>
 
-        
         <Card className="mb-8 bg-gradient-to-br from-primary/20 via-primary/12 to-primary/0">
           <CardContent className="p-0">
             <div
