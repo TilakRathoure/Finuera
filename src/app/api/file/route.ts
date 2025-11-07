@@ -3,6 +3,14 @@ import { google } from "@/lib/utils";
 import { generateText } from "ai";
 import { AIResponse } from "@/lib/types";
 
+const GEMINI_MODELS = [
+  "gemini-2.5-flash-lite-preview-09-2025",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-preview-09-2025",
+  "gemini-2.5-flash-image",
+  "gemini-2.5-flash-lite",
+];
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const SUPPORTED_TYPES = [
   "text/csv",
@@ -67,7 +75,10 @@ export const POST = async (request: NextRequest) => {
     const file = formData.get("file") as File;
 
     if (!file) {
-      return NextResponse.json({ error: "No file provided",message:"No file provided" }, { status: 400 });
+      return NextResponse.json(
+        { error: "No file provided", message: "No file provided" },
+        { status: 400 }
+      );
     }
 
     if (!SUPPORTED_TYPES.includes(file.type)) {
@@ -75,7 +86,7 @@ export const POST = async (request: NextRequest) => {
         {
           error:
             "Unsupported file type. Only CSV, PDF, and images are allowed.",
-            message:"Unsupported file",
+          message: "Unsupported file",
         },
         { status: 400 }
       );
@@ -83,7 +94,10 @@ export const POST = async (request: NextRequest) => {
 
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: "File size too large. Maximum size is 10MB." , message:"File size too large. Maximum size is 10MB."},
+        {
+          error: "File size too large. Maximum size is 10MB.",
+          message: "File size too large. Maximum size is 10MB.",
+        },
         { status: 400 }
       );
     }
@@ -94,9 +108,7 @@ export const POST = async (request: NextRequest) => {
     try {
       if (file.type === "text/csv") {
         const csvText = new TextDecoder().decode(arrayBuffer);
-
         const lines = csvText.split(/\r?\n/);
-
         const limitedCsv = lines.slice(0, 501).join("\n");
 
         const result = await generateText({
@@ -112,34 +124,55 @@ export const POST = async (request: NextRequest) => {
         response = result.text;
       } else {
         const uint8Array = new Uint8Array(arrayBuffer);
+        let result = null;
 
-        const result = await generateText({
-          model: google("gemini-2.5-flash"),
-          messages: [
-            {
-              role: "user",
-              content: [
+        for (const model of GEMINI_MODELS) {
+          try {
+            const res = await generateText({
+              model: google(model),
+              messages: [
                 {
-                  type: "text",
-                  text: `Please analyze this ${
-                    file.type.startsWith("image/") ? "image" : "PDF"
-                  } file and follow these instructions: ${instructions}`,
-                },
-                file.type.startsWith("image/")
-                  ? {
-                      type: "image",
-                      image: uint8Array,
-                      mediaType: file.type,
-                    }
-                  : {
-                      type: "file",
-                      data: uint8Array,
-                      mediaType: file.type,
+                  role: "user",
+                  content: [
+                    {
+                      type: "text",
+                      text: `Please analyze this ${
+                        file.type.startsWith("image/") ? "image" : "PDF"
+                      } file and follow these instructions: ${instructions}`,
                     },
+                    file.type.startsWith("image/")
+                      ? {
+                          type: "image",
+                          image: uint8Array,
+                          mediaType: file.type,
+                        }
+                      : {
+                          type: "file",
+                          data: uint8Array,
+                          mediaType: file.type,
+                        },
+                  ],
+                },
               ],
+            });
+
+            result = res;
+            console.log(`Result with model ${model}`)
+            break;
+          } catch (error) {
+            continue;
+          }
+        }
+
+        if (!result) {
+          return NextResponse.json(
+            {
+              error: "All models failed",
+              message: "Unable to process file with available Gemini models",
             },
-          ],
-        });
+            { status: 500 }
+          );
+        }
 
         response = result.text;
       }

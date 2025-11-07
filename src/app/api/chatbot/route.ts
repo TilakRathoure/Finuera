@@ -1,5 +1,6 @@
 import { google } from "@/lib/utils";
-import {convertToModelMessages, streamText } from "ai";
+import { convertToModelMessages, streamText } from "ai";
+import { NextResponse } from "next/server";
 
 const initialMessage = `
 You are VedAI, an advanced financial assistant AI created by Tilak Rathoure and integrated into the Finuera platform. 
@@ -58,17 +59,35 @@ I
 
 `;
 
-export const runtime="edge";
+export const runtime = "edge";
+
+const GEMINI_MODELS = [
+  "gemini-2.5-flash-lite-preview-09-2025",
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-preview-09-2025",
+  "gemini-2.5-flash-image",
+  "gemini-2.5-flash-lite",
+];
 
 export const POST = async (req: Request) => {
   const { messages } = await req.json();
 
-  const result = streamText({
-    model: google.chat("gemini-2.5-flash-lite"),
-    system:initialMessage,
-    messages:convertToModelMessages(messages),
-    temperature: 0.7,
+  for (const modelName of GEMINI_MODELS) {
+    try {
+      const result = streamText({
+        model: google.chat(modelName),
+        system: initialMessage,
+        messages: convertToModelMessages(messages),
+        temperature: 0.7,
+      });
+      console.log(`Result with model ${modelName}`);
+      return result.toUIMessageStreamResponse();
+    } catch (err) {
+      console.error(`Model ${modelName} failed:`);
+      continue;
+    }
+  }
+  return new Response("All Gemini models failed or quota exceeded.", {
+    status: 429,
   });
-
-  return result.toUIMessageStreamResponse();
 };
