@@ -82,6 +82,10 @@ export interface Dashboard{
     part2:string
   },
   chartconfig:chartconfig,
+  confidence:{
+    text:string,
+    number:number,
+  }
 }
 
 export interface AIResponse {

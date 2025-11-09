@@ -29,6 +29,7 @@ Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the
 4.1  Analyze the spending data and generate 3–5 concise, actionable insights. Each insight should be specific, data-driven, and no longer than 2 sentences. Highlight anomalies, comparisons with past months, or budget overruns. Provide clear suggestions where applicable (e.g., reduce X, adjust Y, or allocate more to Z). This part should be in one sentence;
 4.2  Give a tip based on the spending in about 100 words.
 5. And chart config for categarires and their spending with a random colour;
+6. Confidence: give 0–100% and justify; if anything is obscured/blurred/unclear, cap confidence at ≤85%, only give >95% if perfectly clear and briefly explain what reduced the confidence;
 
 Return:
 {
@@ -59,6 +60,10 @@ Return:
     label: "Transportation",
     color: "#3b82f6", 
   }
+  }
+  "confidence":{
+  text:String (what reduced the confidence)
+  number: number (0-100 how confident)
   }
   }
 

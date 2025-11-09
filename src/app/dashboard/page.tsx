@@ -26,6 +26,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { CardComponent } from "../price/page";
 
 // Color palette for pie chart
 const COLORS = [
@@ -80,9 +81,27 @@ const Dashboard = () => {
     } as Record<string, { label: string; color?: string }>
   );
 
+  console.log(dashboard);
+
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[150px]">
-      <div className="max-w-7xl mx-auto">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[90px]">
+      <div className="border-5 border-black text-black">
+        {dashboard.confidence.number}
+        <p>{dashboard.confidence.text}</p>
+      </div>
+      <CardComponent
+        name={"Your Current Plan"}
+        price={"$0"}
+        period={"/month"}
+        features={[
+          "Upload CSV/PDF/Image for finance tracking",
+          "Only up to 250 financial data entries per file",
+          "Limited VedAI queries",
+        ]}
+        buttonText={"Upgrade to Pro"}
+        buttonVariant={"default"}
+      />
+      <div className="max-w-7xl mx-auto mt-5">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -96,7 +115,7 @@ const Dashboard = () => {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Total Amount Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
+          <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
             <div className="flex items-center justify-between">
               <div className="lg:flex lg:flex-col lg:gap-3">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -114,7 +133,7 @@ const Dashboard = () => {
           </div>
 
           {/* Categories Count */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
+          <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
             <div className="flex items-center justify-between">
               <div className="lg:flex lg:flex-col lg:gap-3">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
