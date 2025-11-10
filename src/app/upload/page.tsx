@@ -144,8 +144,8 @@ const UploadPage = () => {
       setUploadComplete(true);
     } catch (error) {
       const err = error as AxiosError;
-      const message = err.response?.data as ErrResponse;
-      toast.error(message.message);
+      const data = err.response?.data as ErrResponse;
+      toast.error(`Please Try Again. ${data.message}`);
     } finally {
       setUploading(false);
     }
@@ -278,7 +278,7 @@ const UploadPage = () => {
                   Processing...
                 </>
               ) : uploadComplete ? (
-                <Link href="/dashboard" className="flex">
+                <Link href="/dashboard" className="flex items-center justify-center w-full h-full">
                   <Check className="mr-2 h-4 w-4" />
                   Upload Complete! Click for Dashboard
                 </Link>
