@@ -85,10 +85,6 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[90px]">
-      <div className="border-5 border-black text-black">
-        {dashboard.confidence.number}
-        <p>{dashboard.confidence.text}</p>
-      </div>
       <CardComponent
         name={"Your Current Plan"}
         price={"$0"}
@@ -300,6 +296,51 @@ const Dashboard = () => {
             </div>
           </CardFooter>
         </Card>
+      </div>
+      {/* Confidence Score */}
+      <div className="max-w-7xl mx-auto mt-5">
+        <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors border-l-4 border-blue-500">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  Data Confidence Score
+                </h3>
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    dashboard.confidence.number >= 95
+                      ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300"
+                      : dashboard.confidence.number >= 85
+                      ? "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                      : dashboard.confidence.number >= 70
+                      ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300"
+                      : "bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300"
+                  }`}
+                >
+                  {dashboard.confidence.number}%
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {dashboard.confidence.text}
+              </p>
+            </div>
+          </div>
+          {/* Progress Bar */}
+          <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+            <div
+              className={`h-full rounded-full transition-all duration-500 ${
+                dashboard.confidence.number >= 95
+                  ? "bg-green-500"
+                  : dashboard.confidence.number >= 85
+                  ? "bg-blue-500"
+                  : dashboard.confidence.number >= 70
+                  ? "bg-yellow-500"
+                  : "bg-red-500"
+              }`}
+              style={{ width: `${dashboard.confidence.number}%` }}
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   );

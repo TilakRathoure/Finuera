@@ -62,7 +62,7 @@ Return:
   }
   }
   "confidence":{
-  text:String (what reduced the confidence)
+  text:String (what reduced the confidence in short and precise)
   number: number (0-100 how confident)
   }
   }
