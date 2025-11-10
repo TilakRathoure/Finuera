@@ -26,7 +26,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { CardComponent } from "../price/page";
+import CardComponent from "@/components/ui/CardComponent";
 
 // Color palette for pie chart
 const COLORS = [

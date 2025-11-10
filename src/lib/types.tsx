@@ -1,10 +1,21 @@
 import { LucideIcon } from "lucide-react";
 
-export interface Homeinfo{
-  title:string,
-  description:string,
-  icon:LucideIcon
-  color:string,
+export interface Plans {
+  name: string;
+  price: string;
+  period: string;
+  features: string[];
+  buttonText: string;
+  buttonVariant: "default" | "secondary";
+  highlight?: boolean;
+  link?: string;
+}
+
+export interface Homeinfo {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
 }
 
 export interface NavItem {
@@ -50,42 +61,58 @@ export interface VedAIFeature {
 export interface CTAButton {
   text: string;
   icon?: LucideIcon;
-  variant: 'default' | 'outline';
-  iconPosition?: 'left' | 'right';
+  variant: "default" | "outline";
+  iconPosition?: "left" | "right";
 }
 
 export interface FooterLink {
   label: string;
   href: string;
-};
-
-export interface ErrResponse{
-  error:string,
-  message:string;
 }
 
-interface charinfo{
-  label:string,
-  color:string,
+export interface ErrResponse {
+  error: string;
+  message: string;
 }
 
-export interface chartconfig{housing?:charinfo, transportation?:charinfo, groceries?:charinfo, utilities?:charinfo, entertainment?:charinfo, food?:charinfo, shopping?:charinfo, healthcare?:charinfo, education?:charinfo, personal?:charinfo, travel?:charinfo, insurance?:charinfo, gifts?:charinfo, bills?:charinfo, "other-expense"?:charinfo}
+interface charinfo {
+  label: string;
+  color: string;
+}
 
-export interface Dashboard{
-  error: boolean,
-  currencysymbol:string,
-  totalAmount:number,
-  monthlySpending:{month:string, spent:number}[],
-  categories:{category:string, amount:number}[],
-  tip:{
-    part1:string,
-    part2:string
-  },
-  chartconfig:chartconfig,
-  confidence:{
-    text:string,
-    number:number,
-  }
+export interface chartconfig {
+  housing?: charinfo;
+  transportation?: charinfo;
+  groceries?: charinfo;
+  utilities?: charinfo;
+  entertainment?: charinfo;
+  food?: charinfo;
+  shopping?: charinfo;
+  healthcare?: charinfo;
+  education?: charinfo;
+  personal?: charinfo;
+  travel?: charinfo;
+  insurance?: charinfo;
+  gifts?: charinfo;
+  bills?: charinfo;
+  "other-expense"?: charinfo;
+}
+
+export interface Dashboard {
+  error: boolean;
+  currencysymbol: string;
+  totalAmount: number;
+  monthlySpending: { month: string; spent: number }[];
+  categories: { category: string; amount: number }[];
+  tip: {
+    part1: string;
+    part2: string;
+  };
+  chartconfig: chartconfig;
+  confidence: {
+    text: string;
+    number: number;
+  };
 }
 
 export interface AIResponse {
@@ -96,4 +123,3 @@ export interface AIResponse {
   chartconfig?: [{ label: string; color: string }];
   error: string;
 }
-
