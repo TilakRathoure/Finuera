@@ -1,12 +1,12 @@
 # Finuera
 
 
-<img src="https://github.com/user-attachments/assets/c312ec12-d468-44b1-a2ef-6f0e36c59ed3" width="100%" />
+<p align="center"><img width="100%" height="854" alt="Screenshot 2025-11-10 204131" src="https://github.com/user-attachments/assets/fb7b2d4b-16d3-4b1f-83a8-fb1ca9d9b651" />
 
-
-<p align="center">
   <img src="https://github.com/user-attachments/assets/a58a99b8-814b-474b-92f5-34db11dc59d7" width="49%" />
   <img src="https://github.com/user-attachments/assets/edf2db95-783d-40f2-a242-a0fe7cf81005" width="49%" />
+  <img width="100%" height="859" alt="Screenshot 2025-11-26 224128" src="https://github.com/user-attachments/assets/04563657-865c-49fe-a2b3-41934be8735a" />
+
 </p>
 Finuera is an AI-powered finance platform with a smart chatbot, helping users upload data, analyze expenses, and gain insights through interactive charts and personalized guidance.
 <br/>
