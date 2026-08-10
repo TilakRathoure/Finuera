@@ -1,6 +1,6 @@
+import { GEMINI_MODELS } from "@/lib/gemini";
 import { google } from "@/lib/utils";
 import { convertToModelMessages, streamText } from "ai";
-import { NextResponse } from "next/server";
 
 const initialMessage = `
 You are VedAI, Finuera's AI financial assistant created by Tilak Rathoure.
@@ -26,11 +26,6 @@ Rules:
 
 export const runtime = "edge";
 
-const GEMINI_MODELS = [
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
-];
-
 export const POST = async (req: Request) => {
   const { messages } = await req.json();
 
@@ -44,7 +39,7 @@ export const POST = async (req: Request) => {
       });
       console.log(`Result with model ${modelName}`);
       return result.toUIMessageStreamResponse();
-    } catch (err) {
+    } catch {
       console.error(`Model ${modelName} failed:`);
       continue;
     }

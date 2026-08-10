@@ -1,27 +1,27 @@
 "use client";
 import React, { createContext, useEffect, useState } from "react";
-import { Dashboard } from "./types";
+import { Dashboard } from "@/types/dashboard";
 
 export const DarkModeContext = createContext<{
   dark: boolean;
   setdark: React.Dispatch<React.SetStateAction<boolean>>;
-  chat:boolean;
-  setChat:React.Dispatch<React.SetStateAction<boolean>>;
-  dashboard:Dashboard | null,
-  setdashboard:React.Dispatch<React.SetStateAction<Dashboard | null>>;
+  chat: boolean;
+  setChat: React.Dispatch<React.SetStateAction<boolean>>;
+  dashboard: Dashboard | null;
+  setdashboard: React.Dispatch<React.SetStateAction<Dashboard | null>>;
 }>({
-  dark: false,
+  dark: true,
   setdark: () => {},
   chat: false,
-  setChat:()=>{},
-  dashboard:null,
-  setdashboard:()=>{},
+  setChat: () => {},
+  dashboard: null,
+  setdashboard: () => {},
 });
 
 const DarkModeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [dark, setdark] = useState<boolean>(false);
-  const [chat,setChat]=useState<boolean>(false);
-  const [dashboard,setdashboard]=useState<Dashboard|null> (null);
+  const [dark, setdark] = useState<boolean>(true);
+  const [chat, setChat] = useState<boolean>(false);
+  const [dashboard, setdashboard] = useState<Dashboard | null>(null);
 
   useEffect(() => {
     if (dark) {
@@ -32,7 +32,9 @@ const DarkModeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [dark]);
 
   return (
-    <DarkModeContext.Provider value={{ dark, setdark,chat,setChat,dashboard,setdashboard }}>
+    <DarkModeContext.Provider
+      value={{ dark, setdark, chat, setChat, dashboard, setdashboard }}
+    >
       {children}
     </DarkModeContext.Provider>
   );

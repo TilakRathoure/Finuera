@@ -11,17 +11,12 @@ const Schema = new mongoose.Schema({
   },
   password: {
     type: String,
-    select:false,
+    select: false,
   },
-  googleId:{
-    type:String,
-    required:false
-
-  }
-
+  googleId: {
+    type: String,
+    required: false,
+  },
 });
 
-export const User=mongoose.models?.User || mongoose.model("User",Schema);
-
-
-  
+export const User = mongoose.models?.User || mongoose.model("User", Schema);

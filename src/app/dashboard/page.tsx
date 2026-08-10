@@ -1,5 +1,6 @@
 "use client";
-import { Lightbulb, TrendingUp, DollarSign, Calendar } from "lucide-react";
+
+import { Lightbulb, TrendingUp, ArrowUpRight } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -11,8 +12,9 @@ import {
   LineChart,
 } from "recharts";
 import { useContext } from "react";
-import { DarkModeContext } from "@/lib/darkmode";
+import { DarkModeContext } from "@/providers/dark-mode";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -26,20 +28,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import CardComponent from "@/components/ui/CardComponent";
+import { Button } from "@/components/ui/button";
+import { InkItem, InkStagger, Reveal } from "@/components/ui/motion";
 
-// Color palette for pie chart
-const COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#8884D8",
-  "#E91E63",
-  "#9C27B0",
-  "#4CAF50",
-  "#FF5722",
-  "#607D8B",
+const CHART_COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
 ];
 
 const Dashboard = () => {
@@ -55,14 +52,13 @@ const Dashboard = () => {
   const categoryChartData = dashboard.categories.map((item, index) => ({
     category: item.category,
     amount: item.amount,
-    fill: COLORS[index % COLORS.length],
+    fill: CHART_COLORS[index % CHART_COLORS.length],
   }));
 
-  // Chart configs
   const monthlyChartConfig = {
     amount: {
       label: "Amount",
-      color: "#0088FE",
+      color: "var(--chart-1)",
     },
   };
 
@@ -70,7 +66,7 @@ const Dashboard = () => {
     (config, cat, index) => {
       config[cat.category] = {
         label: cat.category.charAt(0).toUpperCase() + cat.category.slice(1),
-        color: COLORS[index % COLORS.length],
+        color: CHART_COLORS[index % CHART_COLORS.length],
       };
       return config;
     },
@@ -81,95 +77,92 @@ const Dashboard = () => {
     } as Record<string, { label: string; color?: string }>
   );
 
-  console.log(dashboard);
+  const confidenceTone =
+    dashboard.confidence.number >= 70
+      ? "bg-brand"
+      : "bg-destructive";
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors pt-[90px]">
-      <CardComponent
-        name={"Your Current Plan"}
-        price={"$0"}
-        period={"/month"}
-        features={[
-          "Upload CSV/PDF/Image for finance tracking",
-          "Only up to 250 financial data entries per file",
-          "Limited VedAI queries",
-        ]}
-        buttonText={"Upgrade to Pro"}
-        buttonVariant={"default"}
-      />
-      <div className="max-w-7xl mx-auto mt-5">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-            Expense Dashboard
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Track your spending patterns and get insights
-          </p>
-        </div>
+    <div className="page-shell atmosphere-muted page-offset min-h-screen pb-16">
+      <div className="section-container py-6 md:py-10">
+        <Reveal className="mb-8 flex flex-col gap-4 border-b border-border pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="font-display mb-2 text-3xl font-semibold tracking-tight md:text-4xl">
+              Expense dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Spending patterns and insights from your latest upload
+            </p>
+          </div>
+          <Button asChild variant="outline" size="sm" className="w-fit shrink-0">
+            <Link href="/price">
+              Free plan
+              <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </Reveal>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Total Amount Card */}
-          <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
-            <div className="flex items-center justify-between">
-              <div className="lg:flex lg:flex-col lg:gap-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Total Spending
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  {dashboard.currencysymbol}
-                  {dashboard.totalAmount.toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-green-100 dark:bg-green-900/20 p-3 rounded-full transition-colors">
-                <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
-              </div>
+        <InkStagger className="mb-8 grid grid-cols-2 gap-6 md:grid-cols-4">
+          <InkItem>
+            <div className="border-t border-border pt-4">
+              <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Total spending
+              </p>
+              <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+                {dashboard.currencysymbol}
+                {dashboard.totalAmount.toFixed(2)}
+              </p>
+            </div>
+          </InkItem>
+          <InkItem>
+            <div className="border-t border-border pt-4">
+              <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Categories
+              </p>
+              <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+                {dashboard.categories.length}
+              </p>
+            </div>
+          </InkItem>
+          <InkItem>
+            <div className="border-t border-border pt-4">
+              <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Months tracked
+              </p>
+              <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+                {dashboard.monthlySpending.length}
+              </p>
+            </div>
+          </InkItem>
+          <InkItem>
+            <div className="border-t border-border pt-4">
+              <p className="mb-1 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Confidence
+              </p>
+              <p className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
+                {dashboard.confidence.number}%
+              </p>
+            </div>
+          </InkItem>
+        </InkStagger>
+
+        <Reveal delay={0.06} className="mb-8 flex gap-3 border-l-2 border-l-brand bg-brand/5 px-4 py-4 md:px-5">
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+          <div>
+            <h3 className="font-display mb-1 font-semibold">Smart tip</h3>
+            <div className="space-y-1 text-sm leading-relaxed text-muted-foreground">
+              <p>{dashboard.tip.part1}</p>
+              <p>{dashboard.tip.part2}</p>
             </div>
           </div>
+        </Reveal>
 
-          {/* Categories Count */}
-          <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors flex flex-col justify-center min-h-[150px]">
-            <div className="flex items-center justify-between">
-              <div className="lg:flex lg:flex-col lg:gap-3">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  Categories
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  {dashboard.categories.length}
-                </p>
-              </div>
-              <div className="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-full transition-colors">
-                <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-            </div>
-          </div>
-
-          {/* Tip Card */}
-          <div className="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700 rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors">
-            <div className="flex items-start gap-3">
-              <div className="bg-yellow-100 dark:bg-yellow-900/20 p-2 rounded-full transition-colors">
-                <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
-                  Smart Tip
-                </h3>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed flex flex-col gap-2">
-                  <p>{dashboard.tip.part1}</p>
-                  <p>{dashboard.tip.part2}</p>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Charts Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Monthly Spending Bar Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Monthly Spending</CardTitle>
+        <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <Card className="border-border/70 bg-card/90">
+            <CardHeader className="pb-2">
+              <CardTitle className="font-display font-semibold">
+                Monthly spending
+              </CardTitle>
               <CardDescription>Your spending by month</CardDescription>
             </CardHeader>
             <CardContent>
@@ -187,28 +180,29 @@ const Dashboard = () => {
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
-                  <Bar dataKey="amount" fill="var(--color-amount)" radius={8} />
+                  <Bar dataKey="amount" fill="var(--color-amount)" radius={4} />
                 </BarChart>
               </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm">
-              <div className="flex gap-2 leading-none font-medium">
-                <TrendingUp className="h-4 w-4" />
+            <CardFooter className="text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-brand" />
                 Showing spending for tracked months
               </div>
             </CardFooter>
           </Card>
 
-          {/* Category Pie Chart */}
-          <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
-              <CardTitle>Spending by Category</CardTitle>
+          <Card className="flex flex-col border-border/70 bg-card/90">
+            <CardHeader className="pb-2">
+              <CardTitle className="font-display font-semibold">
+                Spending by category
+              </CardTitle>
               <CardDescription>Breakdown of your expenses</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
               <ChartContainer
                 config={categoryChartConfig}
-                className="mx-auto aspect-square max-h-[250px]"
+                className="mx-auto aspect-square max-h-[240px]"
               >
                 <PieChart>
                   <ChartTooltip
@@ -223,19 +217,18 @@ const Dashboard = () => {
                 </PieChart>
               </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-              <div className="flex items-center gap-2 leading-none font-medium">
-                <TrendingUp className="h-4 w-4" />
-                Monitor your spending trends to identify patterns
-              </div>
-              <div className="flex flex-wrap gap-4 mt-2">
+            <CardFooter className="flex-col items-start gap-3 text-sm">
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
                 {dashboard.categories.map((cat, index) => (
-                  <div key={index} className="flex items-center gap-2">
+                  <div key={cat.category} className="flex items-center gap-2">
                     <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                    ></div>
-                    <span className="text-sm text-muted-foreground capitalize">
+                      className="h-2.5 w-2.5 shrink-0"
+                      style={{
+                        backgroundColor:
+                          CHART_COLORS[index % CHART_COLORS.length],
+                      }}
+                    />
+                    <span className="capitalize text-muted-foreground">
                       {cat.category}: {dashboard.currencysymbol}
                       {cat.amount.toFixed(2)}
                     </span>
@@ -246,26 +239,24 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        {/* Monthly Trend Line Chart */}
-        <Card className="max-h-[90vh]">
-          <CardHeader>
-            <CardTitle>Spending Trend</CardTitle>
+        <Card className="mb-6 border-border/70 bg-card/90">
+          <CardHeader className="pb-2">
+            <CardTitle className="font-display font-semibold">
+              Spending trend
+            </CardTitle>
             <CardDescription>
               Track your spending pattern over time
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex justify-center">
+          <CardContent>
             <ChartContainer
               config={monthlyChartConfig}
-              className="max-h-[60vh] flex-1"
+              className="h-[260px] w-full"
             >
               <LineChart
                 accessibilityLayer
                 data={monthlyChartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
+                margin={{ left: 12, right: 12 }}
               >
                 <CartesianGrid vertical={false} />
                 <XAxis
@@ -281,7 +272,7 @@ const Dashboard = () => {
                 />
                 <Line
                   dataKey="amount"
-                  type="linear"
+                  type="monotone"
                   stroke="var(--color-amount)"
                   strokeWidth={2}
                   dot={false}
@@ -289,56 +280,31 @@ const Dashboard = () => {
               </LineChart>
             </ChartContainer>
           </CardContent>
-          <CardFooter className="flex-col items-start gap-2 text-sm">
-            <div className="flex gap-2 leading-none font-medium">
-              <TrendingUp className="h-4 w-4" />
-              Monitor your spending trends to identify patterns
-            </div>
-          </CardFooter>
         </Card>
-      </div>
-      {/* Confidence Score */}
-      <div className="max-w-7xl mx-auto mt-5">
-        <div className="bg-white dark:bg-black rounded-lg shadow dark:shadow-gray-700/20 p-6 transition-colors border-l-4 border-blue-500">
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  Data Confidence Score
-                </h3>
-                <div
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    dashboard.confidence.number >= 95
-                      ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-300"
-                      : dashboard.confidence.number >= 85
-                      ? "bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                      : dashboard.confidence.number >= 70
-                      ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300"
-                      : "bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-300"
-                  }`}
-                >
-                  {dashboard.confidence.number}%
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                {dashboard.confidence.text}
-              </p>
-            </div>
-          </div>
-          {/* Progress Bar */}
-          <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${
-                dashboard.confidence.number >= 95
-                  ? "bg-green-500"
-                  : dashboard.confidence.number >= 85
-                  ? "bg-blue-500"
-                  : dashboard.confidence.number >= 70
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
+
+        <div className="border-t border-border pt-6">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <h3 className="font-display text-lg font-semibold">
+              Data confidence
+            </h3>
+            <span
+              className={`px-2 py-0.5 text-sm font-medium ${
+                dashboard.confidence.number >= 70
+                  ? "bg-brand/10 text-brand"
+                  : "bg-destructive/10 text-destructive"
               }`}
+            >
+              {dashboard.confidence.number}%
+            </span>
+          </div>
+          <p className="mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {dashboard.confidence.text}
+          </p>
+          <div className="h-1.5 w-full max-w-md overflow-hidden bg-muted">
+            <div
+              className={`h-full transition-all duration-500 ${confidenceTone}`}
               style={{ width: `${dashboard.confidence.number}%` }}
-            ></div>
+            />
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
-import { auth } from "@/auth";
-import Page from "@/components/Client/Signu";
+import { auth } from "@/server/auth";
+import Page from "@/components/auth/Signup";
 import { redirect } from "next/navigation";
 
 const SignupPage = async() => {

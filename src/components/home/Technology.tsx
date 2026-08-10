@@ -1,100 +1,93 @@
+"use client";
+
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { TechSection } from "@/lib/types";
+import { TechSection } from "@/types/home";
 import { Camera, FileText, Shield, TrendingUp, Zap } from "lucide-react";
+import { InkItem, InkStagger, Reveal } from "../ui/motion";
 
 const techSections: TechSection[] = [
   {
-    title: "VedAI Integration",
+    title: "VedAI layer",
     description:
-      "Advanced natural language processing for personalized financial",
+      "Natural language over your numbers — context-aware, concise, finance-first.",
     features: [
-      { icon: Zap, text: "Multi-format data processing" },
-      { icon: Zap, text: "Context-aware responses" },
-      { icon: Zap, text: "Real-time financial insights" },
-      { icon: Zap, text: "Personalized recommendations" },
-    ],
-  },
-
-  {
-    title: "Modern Tech Stack",
-    description:
-      "Built with Next.js, Tailwind CSS, and Shadcn for optimal performance and user experience",
-    features: [
-      { icon: Zap, text: "Lightning-fast performance" },
-      { icon: Shield, text: "Secure authentication with AuthJS" },
-      { icon: FileText, text: "Multi-format file processing" },
+      { icon: Zap, text: "Multi-format understanding" },
+      { icon: Zap, text: "Context-aware replies" },
+      { icon: Zap, text: "Live insight drafting" },
+      { icon: Zap, text: "Personal recommendations" },
     ],
   },
   {
-    title: "Smart Data Processing",
+    title: "Modern stack",
     description:
-      "Advanced AI algorithms extract insights from your financial data automatically",
+      "Next.js and a careful UI layer so analysis stays fast and readable.",
     features: [
-      { icon: Camera, text: "Photo recognition & OCR" },
-      { icon: FileText, text: "CSV & PDF parsing" },
-      { icon: TrendingUp, text: "Pattern recognition" },
+      { icon: Zap, text: "Responsive performance" },
+      { icon: Shield, text: "AuthJS-secured sessions" },
+      { icon: FileText, text: "CSV, PDF, and image intake" },
+    ],
+  },
+  {
+    title: "Data craft",
+    description:
+      "Extraction and pattern finding happen automatically after you upload.",
+    features: [
+      { icon: Camera, text: "Photo OCR for statements" },
+      { icon: FileText, text: "Structured file parsing" },
+      { icon: TrendingUp, text: "Spending pattern detection" },
     ],
   },
 ];
 
-interface TechSectionComponentProps {
-  section: TechSection;
-}
-
-const TechSectionComponent = ({ section }: TechSectionComponentProps) => (
-  <Card className="bg-gradient-to-br from-background to-muted/20 w-full">
-    <CardHeader>
-      <CardTitle>{section.title}</CardTitle>
-      <p className="text-muted-foreground">{section.description}</p>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-3">
-        {section.features.map((feature, index) => {
-          const Icon = feature.icon;
-          return (
-            <div key={index} className="flex items-center ">
-              <Icon className="w-5 h-5 mr-3" />
-              {feature.text}
-            </div>
-          );
-        })}
-      </div>
-    </CardContent>
-  </Card>
-);
-
 const Technology = () => {
   return (
-    <div id="technology">
-      {" "}
-      <section className="py-20 bg-muted">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <Badge
-              variant="secondary"
-              className="mb-6 bg-primary/10 text-primary border-primary/20"
-            >
-              Powered By
-            </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Cutting-Edge <span className="text-primary">Technology</span>
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-              We combine the latest AI models with modern web technologies to
-              deliver an unmatched financial analysis experience.
-            </p>
-          </div>
+    <section
+      id="technology"
+      className="section-pad atmosphere-muted bg-muted/30"
+    >
+      <div className="section-container">
+        <Reveal className="mx-auto mb-14 max-w-2xl text-center md:mb-16">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-brand">
+            Under the hood
+          </p>
+          <h2 className="font-display mb-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
+            Quiet technology, clear results
+          </h2>
+          <p className="text-muted-foreground md:text-lg">
+            Serious models and a lean web stack — without the noise.
+          </p>
+        </Reveal>
 
-          <div className="flex flex-col md:flex-row gap-8">
-            {techSections.map((section, index) => (
-              <TechSectionComponent key={index} section={section} />
-            ))}
-          </div>
-        </div>
-      </section>
-    </div>
+        <InkStagger className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-10">
+          {techSections.map((section) => (
+            <InkItem key={section.title}>
+              <div className="h-full border-l border-border pl-5 md:pl-6">
+                <h3 className="font-display mb-2 text-xl font-semibold tracking-tight">
+                  {section.title}
+                </h3>
+                <p className="mb-6 text-sm leading-relaxed text-muted-foreground">
+                  {section.description}
+                </p>
+                <ul className="space-y-3">
+                  {section.features.map((feature, index) => {
+                    const Icon = feature.icon;
+                    return (
+                      <li
+                        key={index}
+                        className="flex items-center gap-3 text-sm text-foreground/90"
+                      >
+                        <Icon className="size-4 shrink-0 text-brand" />
+                        {feature.text}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </InkItem>
+          ))}
+        </InkStagger>
+      </div>
+    </section>
   );
 };
 

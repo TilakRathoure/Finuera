@@ -1,7 +1,8 @@
 "use client";
 
 import CardComponent from "@/components/ui/CardComponent";
-import { Plans } from "@/lib/types";
+import { Plans } from "@/types/plans";
+import { InkItem, InkStagger, Reveal } from "@/components/ui/motion";
 
 export default function PricingPage() {
   const plans: Plans[] = [
@@ -14,7 +15,7 @@ export default function PricingPage() {
         "Only up to 250 financial data entries per file",
         "Limited VedAI queries",
       ],
-      buttonText: "Get Started",
+      buttonText: "Get started",
       buttonVariant: "default",
     },
     {
@@ -41,40 +42,41 @@ export default function PricingPage() {
         "Custom AI model integration",
         "Advanced team collaboration",
       ],
-      buttonText: "Contact Sales",
+      buttonText: "Contact sales",
       buttonVariant: "secondary",
     },
   ];
 
   return (
-    <div className="pt-[110px] md:pt-[155px] bg-background text-foreground flex flex-col items-center py-16">
-      <h1 className="text-4xl font-bold mb-12">Pricing Plans</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full">
-        {plans.map(
-          (
-            {
-              highlight,
-              name,
-              period,
-              price,
-              features,
-              buttonText,
-              buttonVariant,
-            }: Plans,
-            index
-          ) => (
-            <CardComponent
-              key={index}
-              highlight={highlight}
-              name={name}
-              period={period}
-              price={price}
-              features={features}
-              buttonText={buttonText}
-              buttonVariant={buttonVariant}
-            />
-          )
-        )}
+    <div className="page-shell atmosphere-muted flex min-h-[100svh] flex-col pt-20 md:pt-[4.75rem]">
+      <div className="section-container flex min-h-0 flex-1 flex-col items-center justify-center py-8">
+        <Reveal className="mb-8 max-w-xl shrink-0 text-center md:mb-10">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-brand">
+            Plans
+          </p>
+          <h1 className="font-display mb-3 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
+            Simple pricing
+          </h1>
+          <p className="text-muted-foreground md:text-lg">
+            Pick the tier that matches how deeply you want to read your money.
+          </p>
+        </Reveal>
+
+        <InkStagger className="grid w-full max-w-6xl grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+          {plans.map((plan, index) => (
+            <InkItem key={index}>
+              <CardComponent
+                highlight={plan.highlight}
+                name={plan.name}
+                period={plan.period}
+                price={plan.price}
+                features={plan.features}
+                buttonText={plan.buttonText}
+                buttonVariant={plan.buttonVariant}
+              />
+            </InkItem>
+          ))}
+        </InkStagger>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import { auth } from "@/auth";
+import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
-import Page from "@/components/Client/Login";
+import Page from "@/components/auth/Login";
 
 
 

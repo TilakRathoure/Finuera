@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { GEMINI_MODELS } from "@/lib/gemini";
 import { google } from "@/lib/utils";
 import { generateText } from "ai";
-import { AIResponse } from "@/lib/types";
-
-const GEMINI_MODELS = [
-  "gemini-2.5-flash-lite-preview-09-2025",
-  "gemini-2.5-flash",
-  "gemini-2.5-flash-preview-09-2025",
-  "gemini-2.5-flash-image",
-  "gemini-2.5-flash-lite",
-];
+import { AIResponse } from "@/types/api";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const SUPPORTED_TYPES = [
@@ -21,57 +14,27 @@ const SUPPORTED_TYPES = [
   "image/gif",
 ];
 const instructions = `
-Analyze this financial file (receipt, bank statement, CSV, etc.) and extract the following information in JSON format:
-
-1. Calculate the total amount spent across all transactions
-2. Group spending by month and calculate monthly totals
-3. Categorize each transaction into one of these categories: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense
-4.1  Analyze the spending data and generate 3–5 concise, actionable insights. Each insight should be specific, data-driven, and no longer than 2 sentences. Highlight anomalies, comparisons with past months, or budget overruns. Provide clear suggestions where applicable (e.g., reduce X, adjust Y, or allocate more to Z). This part should be in one sentence;
-4.2  Give a tip based on the spending in about 100 words.
-5. And chart config for categarires and their spending with a random colour;
-6. Confidence: give 0–100% and justify; if anything is obscured/blurred/unclear, cap confidence at ≤85%, only give >95% if perfectly clear and briefly explain what reduced the confidence;
-
-Return:
+Extract financial data from the provided receipt, statement, CSV, report, image, or PDF.
+Return only valid JSON matching this shape:
 {
-"error":false,
-"currencysymbol":"string",
+  "error": false,
+  "currencysymbol": "string",
   "totalAmount": number,
-  "monthlySpending": [
-    {"month": "January", "spent": number},
-    {"month": "February", "spent": number}
-  ],
-  "categories": [
-    {"category": "groceries", "amount": number},
-    {"category": "transportation", "amount": number}
-  ],
-  "tip": {
-  part1:"string",
-  part2:"string"
-  }
+  "monthlySpending": [{"month": "January", "spent": number}],
+  "categories": [{"category": "groceries", "amount": number}],
+  "tip": {"part1": "string", "part2": "string"},
+  "chartconfig": {"groceries": {"label": "Groceries", "color": "#RRGGBB"}},
+  "confidence": {"text": "string", "number": number}
+}
 
-  "chartconfig:{
-
-  groceries: {
-    label: "Groceries",
-    color: "#1e3a8a",
-  },
-
-  transportation: {
-    label: "Transportation",
-    color: "#3b82f6", 
-  }
-  }
-  "confidence":{
-  text:String (what reduced the confidence in short and precise)
-  number: number (0-100 how confident)
-  }
-  }
-
-You are analyzing financial files such as receipts, bank statements, expense CSVs, or government finance reports.
-If the document has numbers related to money, spending, revenue, taxes, debt, or expenditures, treat it as financial data.
-Only if it truly has no financial content (like poems, random text, or images with no numbers), return {"error":true}.
-
-Do not include any explanation, only return the JSON.
+Requirements:
+- Sum all transactions and group totals by month.
+- Use only these categories: housing, transportation, groceries, utilities, entertainment, food, shopping, healthcare, education, personal, travel, insurance, gifts, bills, other-expense.
+- tip.part1: 3–5 concise, actionable, data-driven insights covering relevant anomalies, month comparisons, or budget overruns.
+- tip.part2: an approximately 100-word spending tip.
+- chartconfig: one entry per returned category, keyed by category, with a readable label and random hex color.
+- confidence.number: 0–100. Cap at 85 if anything is obscured or unclear; use above 95 only when perfectly clear. Briefly explain uncertainty in confidence.text.
+- Treat monetary spending, revenue, tax, debt, or expenditure data as financial. If there is no financial content, return exactly {"error":true}.
 `;
 
 export const POST = async (request: NextRequest) => {
@@ -121,6 +84,7 @@ export const POST = async (request: NextRequest) => {
           try {
             const res = await generateText({
               model: google(model),
+              temperature: 0,
               messages: [
                 {
                   role: "user",
@@ -131,7 +95,7 @@ export const POST = async (request: NextRequest) => {
             result = res;
             console.log(`CSV processed with model ${model}`);
             break;
-          } catch (error) {
+          } catch {
             console.log(`${model} failed for CSV`);
             continue;
           }
@@ -156,6 +120,7 @@ export const POST = async (request: NextRequest) => {
           try {
             const res = await generateText({
               model: google(model),
+              temperature: 0,
               messages: [
                 {
                   role: "user",
@@ -184,7 +149,7 @@ export const POST = async (request: NextRequest) => {
             result = res;
             console.log(`Processed with model ${model}`);
             break;
-          } catch (error) {
+          } catch {
             console.log(`${model} failed`);
             continue;
           }

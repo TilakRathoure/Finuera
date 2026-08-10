@@ -1,4 +1,4 @@
-import { FooterLink } from "@/lib/types";
+import { FooterLink } from "@/types/home";
 import Link from "next/link";
 import React from "react";
 
@@ -10,25 +10,28 @@ const footerLinks: FooterLink[] = [
 
 const Footer = () => {
   return (
-    <footer className="border-t py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <div className="text-2xl font-bold mb-4">
-            Finu<span className="text-blue-500">era</span>
-          </div>
-          <div className="flex justify-center space-x-6 mb-6">
-            {footerLinks.map((link,i) => (
+    <footer className="border-t border-border/50 py-14 md:py-16">
+      <div className="section-container">
+        <div className="flex flex-col items-center gap-7 text-center">
+          <Link
+            href="/"
+            className="font-display text-2xl font-semibold tracking-tight"
+          >
+            Finu<span className="text-brand">era</span>
+          </Link>
+          <nav className="flex flex-wrap justify-center gap-x-10 gap-y-2">
+            {footerLinks.map((link, i) => (
               <Link
                 key={i}
                 href={link.href}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm tracking-wide text-muted-foreground transition-colors hover:text-brand"
               >
                 {link.label}
               </Link>
             ))}
-          </div>
-          <p className="text-muted-foreground">
-            © 2025 Finuera. Powered by VedAI & Advanced Machine Learning.
+          </nav>
+          <p className="text-xs tracking-wide text-muted-foreground">
+            © {new Date().getFullYear()} Finuera · Crafted with VedAI
           </p>
         </div>
       </div>

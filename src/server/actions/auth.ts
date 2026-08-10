@@ -1,8 +1,8 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn } from "@/server/auth";
 import { connectdb } from "@/lib/utils";
-import { User } from "@/models/user";
+import { User } from "@/server/models/user";
 import { hash } from "bcryptjs";
 
 const signup = async (name: string, email: string, password: string) => {

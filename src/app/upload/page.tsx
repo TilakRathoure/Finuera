@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Upload,
   FileText,
-  Image,
+  Image as ImageIcon,
   File,
   X,
   Check,
@@ -15,42 +15,42 @@ import {
   Brain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { ErrResponse, Homeinfo } from "@/lib/types";
+import { ErrResponse } from "@/types/api";
+import { Homeinfo } from "@/types/home";
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 import Link from "next/link";
-import { DarkModeContext } from "@/lib/darkmode";
+import { DarkModeContext } from "@/providers/dark-mode";
+import { cn } from "@/lib/utils";
+import {
+  InkItem,
+  InkStagger,
+  MaskSlide,
+  Reveal,
+} from "@/components/ui/motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const Homeabout: Homeinfo[] = [
   {
-    title: "Smart Categorization",
+    title: "Smart categorization",
     description:
-      "Automatically categorize your expenses with AI-powered insights",
+      "Expenses sorted automatically so patterns surface without busywork.",
     icon: PieChart,
-    color: "text-blue-500",
+    color: "text-brand",
   },
   {
-    title: "Visual Analytics",
+    title: "Visual analytics",
     description:
-      "Beautiful charts and graphs to understand your spending patterns",
+      "Charts built for scanning — months, categories, and trends at a glance.",
     icon: BarChart3,
-    color: "text-green-500",
+    color: "text-brand",
   },
   {
-    title: "AI Financial Advisor",
-    description:
-      "Get personalized financial advice from VedAI based on your data",
+    title: "VedAI advisor",
+    description: "Ask follow-ups on the same data you just uploaded.",
     icon: Brain,
-    color: "text-purple-500",
+    color: "text-brand",
   },
 ];
 
@@ -59,6 +59,7 @@ const UploadPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadComplete, setUploadComplete] = useState(false);
+  const reduce = useReducedMotion();
 
   const { setdashboard } = useContext(DarkModeContext);
 
@@ -77,45 +78,46 @@ const UploadPage = () => {
     e.stopPropagation();
     setDragActive(false);
 
-    const file = e.dataTransfer.files?.[0];
-    if (!file) return;
+    const dropped = e.dataTransfer.files?.[0];
+    if (!dropped) return;
 
-    validateAndSetFile(file);
+    validateAndSetFile(dropped);
   };
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selected = e.target.files?.[0];
+    if (!selected) return;
 
-    validateAndSetFile(file);
+    validateAndSetFile(selected);
   };
 
-  const validateAndSetFile = (file: File) => {
+  const validateAndSetFile = (nextFile: File) => {
     const validFile =
-      file.type === "text/csv" ||
-      file.type === "application/pdf" ||
-      file.type.startsWith("image/");
+      nextFile.type === "text/csv" ||
+      nextFile.type === "application/pdf" ||
+      nextFile.type.startsWith("image/");
 
     if (validFile) {
-      setFile(file);
+      setFile(nextFile);
+      setUploadComplete(false);
     } else {
       toast.error("Only CSV, PDF, and images allowed");
-      console.log("Invalid file type:", file.type);
     }
   };
 
   const removeFile = () => {
     setFile(null);
+    setUploadComplete(false);
   };
 
-  const getFileIcon = (file: File) => {
-    if (file.type === "text/csv")
-      return <FileText className="h-8 w-8 text-green-500" />;
-    if (file.type === "application/pdf")
-      return <File className="h-8 w-8 text-red-500" />;
-    if (file.type.startsWith("image/"))
-      return <Image className="h-8 w-8 text-blue-500" />;
-    return <File className="h-8 w-8 text-muted-foreground" />;
+  const getFileIcon = (selected: File) => {
+    if (selected.type === "text/csv")
+      return <FileText className="h-7 w-7 text-brand" />;
+    if (selected.type === "application/pdf")
+      return <File className="h-7 w-7 text-muted-foreground" />;
+    if (selected.type.startsWith("image/"))
+      return <ImageIcon className="h-7 w-7 text-brand" />;
+    return <File className="h-7 w-7 text-muted-foreground" />;
   };
 
   const formatFileSize = (bytes: number) => {
@@ -138,9 +140,7 @@ const UploadPage = () => {
 
       const { data } = await axios.post("api/file", formdata);
 
-      console.log(data.data);
       setdashboard(data.data);
-
       setUploadComplete(true);
     } catch (error) {
       const err = error as AxiosError;
@@ -153,98 +153,76 @@ const UploadPage = () => {
 
   useEffect(() => {
     if (!file) return;
-
-    window.scrollTo(0, 200);
+    window.scrollTo({ top: 160, behavior: "smooth" });
   }, [file]);
 
   return (
-    <div className="min-h-screen bg-background pt-[80px]">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Upload Your Financial Data
+    <div className="page-shell atmosphere-muted page-offset min-h-screen pb-16">
+      <div className="section-container max-w-3xl py-6 md:py-10">
+        <Reveal className="mb-8 text-center">
+          <h1 className="font-display mb-3 text-3xl font-semibold tracking-tight md:text-4xl">
+            Upload your data
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Upload CSV files, PDFs, or photos to get instant financial insights
-            and AI-powered advice from VedAI
+          <p className="mx-auto max-w-xl text-base text-muted-foreground">
+            CSV, PDF, or a clear photo — Finuera reads it, then VedAI explains
+            it.
           </p>
-        </div>
+        </Reveal>
 
-        <Card className="mb-8 bg-gradient-to-br from-primary/20 via-primary/12 to-primary/0">
-          <CardContent className="p-0">
-            <div
-              className={`relative border-2 border-dashed rounded-lg m-6 p-8 text-center transition-all duration-200 ${
-                dragActive
-                  ? "border-blue-600 bg-blue-50 dark:bg-blue-950/20"
-                  : "border-muted-foreground/25 hover:border-blue-400"
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              <input
-                type="file"
-                accept=".csv,.pdf,image/*"
-                onChange={handleFileInput}
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              />
+        <MaskSlide delay={0.08}>
+          <div
+            className={cn(
+              "relative border border-dashed px-6 py-10 text-center transition-[border-color,background-color] duration-300 md:px-8 md:py-12",
+              dragActive
+                ? "border-brand bg-brand/5"
+                : "border-border bg-card/40 hover:border-brand/40"
+            )}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              accept=".csv,.pdf,image/*"
+              onChange={handleFileInput}
+              className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            />
 
-              <div className="space-y-4">
-                <div className="flex justify-center">
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950/50 rounded-full">
-                    <Upload className="h-8 w-8 text-blue-600" />
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">
-                    Drop your file here
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    or click to browse your computer
-                  </p>
-
-                  <div className="flex justify-center space-x-6 text-sm">
-                    <Badge
-                      variant="outline"
-                      className="flex items-center space-x-1"
-                    >
-                      <Image className="h-3 w-3 text-blue-500" />
-                      <span>Images</span>
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="flex items-center space-x-1"
-                    >
-                      <FileText className="h-3 w-3 text-green-500" />
-                      <span>CSV</span>
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="flex items-center space-x-1"
-                    >
-                      <File className="h-3 w-3 text-red-500" />
-                      <span>PDF</span>
-                    </Badge>
-                  </div>
-                </div>
+            <div className="pointer-events-none flex flex-col items-center gap-3">
+              <Upload className="h-9 w-9 text-brand" />
+              <div>
+                <h3 className="font-display mb-1.5 text-lg font-semibold">
+                  Drop your file here
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  or click to browse · Images · CSV · PDF
+                </p>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </MaskSlide>
 
-        {file && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="text-lg">Selected File</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border">
-                <div className="flex items-center space-x-3">
+        <AnimatePresence>
+          {file && (
+            <motion.div
+              initial={
+                reduce ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }
+              }
+              animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+              exit={
+                reduce
+                  ? undefined
+                  : { opacity: 0, clipPath: "inset(0 0 100% 0)" }
+              }
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-4 space-y-4"
+            >
+              <div className="flex items-center justify-between border border-border/70 bg-card/90 p-4">
+                <div className="flex min-w-0 items-center gap-3">
                   {getFileIcon(file)}
-                  <div>
-                    <p className="font-medium">{file.name}</p>
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{file.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {formatFileSize(file.size)}
                     </p>
@@ -255,75 +233,75 @@ const UploadPage = () => {
                   variant="outline"
                   size="sm"
                   onClick={removeFile}
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
                 >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        )}
 
-        {file && (
-          <div className="text-center mb-8">
-            <Button
-              onClick={handleUpload}
-              disabled={uploading}
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8"
-            >
-              {uploading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Processing...
-                </>
-              ) : uploadComplete ? (
-                <Link href="/dashboard" className="flex items-center justify-center w-full h-full">
-                  <Check className="mr-2 h-4 w-4" />
-                  Upload Complete! Click for Dashboard
-                </Link>
-              ) : (
-                <>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Analyze with VedAI
-                </>
-              )}
-            </Button>
-          </div>
-        )}
+              <div className="flex justify-center">
+                <Button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  size="lg"
+                  className="min-w-[14rem]"
+                  asChild={uploadComplete}
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : uploadComplete ? (
+                    <Link href="/dashboard">
+                      <Check className="mr-2 h-4 w-4" />
+                      Open dashboard
+                    </Link>
+                  ) : (
+                    <>
+                      <Upload className="mr-2 h-4 w-4" />
+                      Analyze with VedAI
+                    </>
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          {Homeabout.map((e, i) => (
-            <Card key={i} className="text-center">
-              <CardContent className="pt-6">
-                <div className="inline-flex items-center justify-center p-3 bg-green-50 dark:bg-green-950/50 rounded-full mb-4">
-                  <e.icon className={`h-6 w-6 ${e.color}`} />
-                </div>
-                <CardTitle className="text-base mb-2">{e.title}</CardTitle>
-                <CardDescription>{e.description}</CardDescription>
-              </CardContent>
-            </Card>
+        <InkStagger className="mt-8 grid gap-6 border-t border-border pt-8 md:grid-cols-3 md:gap-8">
+          {Homeabout.map((item, i) => (
+            <InkItem key={i}>
+              <div className="text-center md:text-left">
+                <item.icon
+                  className={`mb-3 h-5 w-5 ${item.color} mx-auto md:mx-0`}
+                />
+                <h3 className="font-display mb-1.5 text-base font-semibold">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {item.description}
+                </p>
+              </div>
+            </InkItem>
           ))}
-        </div>
+        </InkStagger>
 
-        <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
-          <AlertCircle className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800 dark:text-blue-200">
-            <div className="space-y-1">
-              <p className="font-semibold mb-2">Tips for better analysis:</p>
-              <ul className="text-sm space-y-1 list-disc list-inside ml-2">
-                <li>
-                  CSV files should include columns for date, amount, and
-                  description
-                </li>
-                <li>
-                  PDF bank statements work best when they&apos;re text-based
-                  (not scanned images)
-                </li>
-                <li>For photos, ensure receipts are clear and well-lit</li>
-                <li>Multiple file types supported: CSV, PDF, and images</li>
-              </ul>
-            </div>
+        <Alert className="mt-8 border-brand/20 bg-brand/5">
+          <AlertCircle className="h-4 w-4 text-brand" />
+          <AlertDescription className="text-foreground/80">
+            <p className="mb-2 font-medium">Tips for cleaner analysis</p>
+            <ul className="ml-2 list-inside list-disc space-y-1 text-sm text-muted-foreground">
+              <li>
+                CSV files should include columns for date, amount, and
+                description
+              </li>
+              <li>
+                PDF bank statements work best when they&apos;re text-based (not
+                scanned images)
+              </li>
+              <li>For photos, ensure receipts are clear and well-lit</li>
+            </ul>
           </AlertDescription>
         </Alert>
       </div>
