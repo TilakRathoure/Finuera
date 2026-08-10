@@ -47,23 +47,23 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.99 0.002 250);
+  --background: oklch(0.965 0.004 250);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.995 0.001 250);
   --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.995 0.001 250);
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0.005 250);
+  --secondary: oklch(0.94 0.004 250);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0.005 250);
+  --muted: oklch(0.94 0.004 250);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0.008 250);
+  --accent: oklch(0.94 0.005 250);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0.005 250);
-  --input: oklch(0.922 0.005 250);
+  --border: oklch(0.90 0.004 250);
+  --input: oklch(0.90 0.004 250);
   --ring: oklch(0.623 0.188 259.8);
   --brand: oklch(0.623 0.188 259.8);
   --chart-1: oklch(0.623 0.188 259.8);
@@ -148,9 +148,9 @@
 
   .atmosphere {
     background-image:
-      radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.623 0.188 259.8 / 0.14), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 100% 50%, oklch(0.6 0.118 184.704 / 0.06), transparent 50%),
-      radial-gradient(ellipse 40% 30% at 0% 80%, oklch(0.623 0.188 259.8 / 0.05), transparent 45%);
+      radial-gradient(ellipse 80% 60% at 50% -20%, oklch(0.88 0.005 250 / 0.55), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 50%, oklch(0.82 0.004 250 / 0.28), transparent 50%),
+      radial-gradient(ellipse 40% 30% at 0% 80%, oklch(0.85 0.004 250 / 0.22), transparent 45%);
   }
 
   .dark .atmosphere {
@@ -160,9 +160,25 @@
       radial-gradient(ellipse 40% 30% at 0% 80%, oklch(0.68 0.16 259.8 / 0.08), transparent 45%);
   }
 
+  .atmosphere-hero {
+    background-image:
+      radial-gradient(ellipse 70% 55% at 50% 42%, oklch(1 0 0 / 0.95), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 50% 38%, oklch(0.78 0.006 250 / 0.4), transparent 65%),
+      radial-gradient(ellipse 40% 35% at 80% 70%, oklch(0.86 0.004 250 / 0.25), transparent 55%),
+      radial-gradient(ellipse 35% 30% at 15% 75%, oklch(0.84 0.004 250 / 0.22), transparent 50%);
+  }
+
+  .dark .atmosphere-hero {
+    background-image:
+      radial-gradient(ellipse 70% 55% at 50% 42%, oklch(0.22 0.03 250 / 0.55), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 50% 38%, oklch(0.68 0.16 259.8 / 0.22), transparent 65%),
+      radial-gradient(ellipse 40% 35% at 80% 70%, oklch(0.696 0.17 162.48 / 0.1), transparent 55%),
+      radial-gradient(ellipse 35% 30% at 15% 75%, oklch(0.68 0.16 259.8 / 0.1), transparent 50%);
+  }
+
   .atmosphere-muted {
     background-image:
-      radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.623 0.188 259.8 / 0.08), transparent 60%);
+      radial-gradient(ellipse 70% 50% at 50% 0%, oklch(0.82 0.005 250 / 0.35), transparent 60%);
   }
 
   .dark .atmosphere-muted {

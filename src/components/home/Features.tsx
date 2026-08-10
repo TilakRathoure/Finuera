@@ -21,7 +21,7 @@ const featureCards: FeatureCard[] = [
     icon: MessageSquare,
     title: "VedAI on call",
     description:
-      "Ask plain-language questions about spending, savings, or a confusing line item — get grounded answers.",
+      "Ask plain-language questions about spending, savings, or a confusing line item and get grounded answers.",
     actionText: "Gemini-powered guidance",
     iconBg: "bg-brand/10 border-brand/20",
     iconColor: "text-brand",
@@ -41,7 +41,7 @@ const featureCards: FeatureCard[] = [
     icon: Target,
     title: "Focused insights",
     description:
-      "Recommendations tied to your habits — not a generic finance quiz.",
+      "Recommendations tied to your habits, not a generic finance quiz.",
     actionText: "Personal, not generic",
     iconBg: "bg-brand/10 border-brand/20",
     iconColor: "text-brand",

@@ -9,7 +9,7 @@ const techSections: TechSection[] = [
   {
     title: "VedAI layer",
     description:
-      "Natural language over your numbers — context-aware, concise, finance-first.",
+      "Natural language over your numbers: context-aware, concise, finance-first.",
     features: [
       { icon: Zap, text: "Multi-format understanding" },
       { icon: Zap, text: "Context-aware replies" },
@@ -54,7 +54,7 @@ const Technology = () => {
             Quiet technology, clear results
           </h2>
           <p className="text-muted-foreground md:text-lg">
-            Serious models and a lean web stack — without the noise.
+            Serious models and a lean web stack, without the noise.
           </p>
         </Reveal>
 
