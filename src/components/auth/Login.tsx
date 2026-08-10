@@ -2,6 +2,7 @@
 
 import { login } from "@/server/actions/auth";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
@@ -19,6 +20,8 @@ import Link from "next/link";
 import { BlurIn } from "../ui/motion";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="page-shell atmosphere flex min-h-[100svh] items-center justify-center px-4 pb-4 pt-20 md:pt-[5.25rem]">
       <BlurIn className="w-full max-w-sm">
@@ -37,7 +40,11 @@ const Login = () => {
             </CardAction>
           </CardHeader>
           <form
-            action={async (formdata: FormData) => {
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (loading) return;
+
+              const formdata = new FormData(e.currentTarget);
               const email = formdata.get("email") as string;
               const password = formdata.get("password") as string;
 
@@ -46,15 +53,20 @@ const Login = () => {
                 return;
               }
 
-              const get = await login(email, password);
+              setLoading(true);
+              try {
+                const get = await login(email, password);
 
-              if (get) {
-                toast.error(get);
-                return;
+                if (get) {
+                  toast.error(get);
+                  return;
+                }
+
+                toast.success("successs");
+                redirect("/");
+              } finally {
+                setLoading(false);
               }
-
-              toast.success("successs");
-              redirect("/");
             }}
           >
             <CardContent>
@@ -72,8 +84,13 @@ const Login = () => {
               </div>
             </CardContent>
             <CardFooter className="mt-5 flex-col gap-2">
-              <Button type="submit" className="w-full">
-                Log in
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? "Loading…" : "Log in"}
               </Button>
             </CardFooter>
           </form>

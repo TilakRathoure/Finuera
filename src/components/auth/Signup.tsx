@@ -2,7 +2,7 @@
 
 import { signup } from "@/server/actions/auth";
 import { redirect } from "next/navigation";
-import React from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
@@ -20,6 +20,8 @@ import { Label } from "../ui/label";
 import { BlurIn } from "../ui/motion";
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="page-shell atmosphere flex min-h-[100svh] items-center justify-center px-4 pb-4 pt-20 md:pt-[5.25rem]">
       <BlurIn className="w-full max-w-sm">
@@ -38,7 +40,11 @@ const Signup = () => {
             </CardAction>
           </CardHeader>
           <form
-            action={async (formdata: FormData) => {
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (loading) return;
+
+              const formdata = new FormData(e.currentTarget);
               const name = formdata.get("name") as string;
               const email = formdata.get("email") as string;
               const password = formdata.get("password") as string;
@@ -47,19 +53,24 @@ const Signup = () => {
                 toast.error("Please fill all fields");
                 return;
               }
+
+              setLoading(true);
               const loa = toast.loading("creating");
+              try {
+                const check = await signup(name, email, password);
 
-              const check = await signup(name, email, password);
-
-              if (check)
-                toast.error(check, {
-                  id: loa,
-                });
-              else
-                toast.success("Success", {
-                  id: loa,
-                });
-              redirect("/login");
+                if (check)
+                  toast.error(check, {
+                    id: loa,
+                  });
+                else
+                  toast.success("Success", {
+                    id: loa,
+                  });
+                redirect("/login");
+              } finally {
+                setLoading(false);
+              }
             }}
           >
             <CardContent>
@@ -81,8 +92,13 @@ const Signup = () => {
             </CardContent>
 
             <CardFooter className="mt-5 flex-col gap-2">
-              <Button type="submit" className="w-full">
-                Sign up
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? "Loading…" : "Sign up"}
               </Button>
             </CardFooter>
           </form>
